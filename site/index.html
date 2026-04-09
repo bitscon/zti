@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zero Trust Intelligence</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
+    body { font-family: 'IBM Plex Sans', sans-serif; background: #080808; color: #e2e2e2; }
+    .mono { font-family: 'IBM Plex Mono', monospace; }
+    .gold { color: #e8a020; }
+    .dim { color: #555; }
+    .muted { color: #888; }
+    section { border-top: 1px solid #181818; }
+    .card { background: #0f0f0f; border: 1px solid #1c1c1c; }
+    .arch-box { border: 1px solid #2a2a2a; background: #0d0d0d; }
+    a { color: #e8a020; }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Nav -->
+  <nav class="sticky top-0 z-50 border-b border-[#181818]" style="background:#080808;">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+      <span class="mono text-xs tracking-widest text-white uppercase">ZTI</span>
+      <div class="flex gap-8 mono text-xs text-[#555]">
+        <a href="#problem" class="hover:text-white transition-colors">Problem</a>
+        <a href="#architecture" class="hover:text-white transition-colors">Architecture</a>
+        <a href="#integrity" class="hover:text-white transition-colors">Integrity</a>
+        <a href="#principles" class="hover:text-white transition-colors">Principles</a>
+        <a href="#whitepaper" class="hover:text-white transition-colors">Whitepaper</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="border-t-0 py-36 px-6">
+    <div class="max-w-5xl mx-auto">
+      <p class="mono text-xs tracking-widest text-[#444] uppercase mb-10">Protocol v1.0 · April 2026 · Public Domain</p>
+      <h1 class="text-6xl md:text-8xl font-light text-white leading-none tracking-tight mb-8">
+        Zero Trust<br /><span class="gold">Intelligence</span>
+      </h1>
+      <p class="text-2xl md:text-3xl font-light text-[#888] mb-14 max-w-2xl leading-relaxed">
+        Don't trust AI.<br />Verify it.
+      </p>
+      <div class="flex gap-4 flex-wrap">
+        <a href="#whitepaper" class="mono text-sm px-7 py-3 border border-[#e8a020] text-[#e8a020] hover:bg-[#e8a020] hover:text-black transition-all">Read the Whitepaper →</a>
+        <a href="https://github.com/zerotrustintelligence" class="mono text-sm px-7 py-3 border border-[#2a2a2a] text-[#555] hover:border-white hover:text-white transition-all">GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem -->
+  <section id="problem" class="py-28 px-6">
+    <div class="max-w-5xl mx-auto">
+      <p class="mono text-xs tracking-widest text-[#444] uppercase mb-4">01 / The Problem</p>
+      <h2 class="text-3xl font-light text-white mb-10">AI is probabilistic. Trust is implicit. Verification is absent.</h2>
+      <div class="grid md:grid-cols-2 gap-px bg-[#181818]">
+        <div class="card p-8">
+          <p class="mono text-xs gold uppercase tracking-wide mb-4">It halluccinates</p>
+          <p class="text-[#888] text-sm leading-relaxed">AI outputs are plausible, not correct. No fine-tuning eliminates this. The mechanism is statistical inference — correctness is not the objective function.</p>
+        </div>
+        <div class="card p-8">
+          <p class="mono text-xs gold uppercase tracking-wide mb-4">Trust accumulates</p>
+          <p class="text-[#888] text-sm leading-relaxed">Outputs are filtered, reviewed, or ranked — but the underlying assumption is that the AI's claim is a reasonable starting point. This assumption fails in high-stakes domains.</p>
+        </div>
+        <div class="card p-8">
+          <p class="mono text-xs gold uppercase tracking-wide mb-4">Guardrails are sampling</p>
+          <p class="text-[#888] text-sm leading-relaxed">Existing approaches filter known-bad outputs. They do not verify correctness. A plausible, authoritative, incorrect output passes every guardrail.</p>
+        </div>
+        <div class="card p-8">
+          <p class="mono text-xs gold uppercase tracking-wide mb-4">No audit trail</p>
+          <p class="text-[#888] text-sm leading-relaxed">No existing system produces a deterministic, tamper-evident record of every AI output and its verification result. Failures are discovered after impact.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Insight -->
+  <section class="py-28 px-6" style="background:#0a0a0a;">
+    <div class="max-w-5xl mx-auto">
+      <p class="mono text-xs tracking-widest text-[#444] uppercase mb-4">02 / The Insight</p>
+      <h2 class="text-3xl font-light text-white mb-8">Make AI's trustworthiness irrelevant.</h2>
+      <div class="max-w-2xl">
+        <p class="text-[#888] text-lg leading-relaxed mb-6">Zero trust security didn't improve the network. It made trust irrelevant — by verifying every request regardless of source.</p>
+        <p class="text-[#888] text-lg leading-relaxed mb-8">ZTI applies the same inversion to AI. Don't calibrate the model until it is trustworthy. Build a verification system that makes the model's trustworthiness irrelevant.</p>
+        <p class="text-white text-xl font-light border-l-2 border-[#e8a020] pl-6">Every AI output is an untrusted claim. Verification is not optional. Verification is the architecture.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture -->
+  <section id="architecture" class="py-28 px-6">
+    <div class="max-w-5xl mx-auto">
+      <p class="mono text-xs tracking-widest text-[#444] uppercase mb-4">03 / Architecture</p>
+      <h2 class="text-3xl font-light text-white mb-4">Five layers. Each validates the previous. All-or-nothing.</h2>
+      <p class="text-[#888] mb-14 text-lg font-light">The chain does not degrade gracefully. If any layer fails, the output is rejected.</p>
+
+      <div class="mono text-sm text-[#555] mb-10 text-center tracking-wide">
+        Registry → Detection → Explainability → Validation → Integrity
+      </div>
+
+      <div class="space-y-px">
+        <div class="arch-box p-6 flex gap-8 items-start">
+          <span class="gold mono text-xs shrink-0 w-6">01</span>
+          <div>
+            <h3 class="text-white font-medium mb-2">Registry</h3>
+            <p class="text-[#888] text-sm leading-relaxed">A versioned, closed registry of valid patterns. Immutable at runtime. The ground truth for all downstream verification. Version mismatches are a hard failure.</p>
+          </div>
+        </div>
+        <div class="arch-box p-6 flex gap-8 items-start">
+          <span class="gold mono text-xs shrink-0 w-6">02</span>
+          <div>
+            <h3 class="text-white font-medium mb-2">Detection</h3>
+            <p class="text-[#888] text-sm leading-relaxed">Deterministic pattern matching against the registry. Evidence-bound — every result references specific inputs. Fail-closed — incomplete detection rejects the output.</p>
+          </div>
+        </div>
+        <div class="arch-box p-6 flex gap-8 items-start">
+          <span class="gold mono text-xs shrink-0 w-6">03</span>
+          <div>
+            <h3 class="text-white font-medium mb-2">Explainability</h3>
+            <p class="text-[#888] text-sm leading-relaxed">Auditable artifacts for every detected pattern. Signals, evidence references, registry version. Produced before validation and retained regardless of outcome.</p>
+          </div>
+        </div>
+        <div class="arch-box p-6 flex gap-8 items-start">
+          <span class="gold mono text-xs shrink-0 w-6">04</span>
+          <div>
+            <h3 class="text-white font-medium mb-2">Validation</h3>
+            <p class="text-[#888] text-sm leading-relaxed">Cross-layer integrity check. Patterns match registry. Evidence is consistent. Versions are aligned. All-or-nothing — partial validation is not validation.</p>
+          </div>
+        </div>
+        <div class="arch-box p-6 flex gap-8 items-start">
+          <span class="gold mono text-xs shrink-0 w-6">05</span>
+          <div>
+            <h3 class="text-white font-medium mb-2">Integrity</h3>
+            <p class="text-[#888] text-sm leading-relaxed">Every verified decision is recorded in a hash-chained, tamper-evident log. Any modification, insertion, or deletion is detectable. The chain grows monotonically.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Integrity Layer -->
+  <section id="integrity" class="py-28 px-6" style="background:#0a0a0a;">
+    <div class="max-w-5xl mx-auto">
+      <p class="mono text-xs tracking-widest text-[#444] uppercase mb-4">04 / The Integrity Layer</p>
+      <h2 class="text-3xl font-light text-white mb-8">Tamper-evident proof of every decision.</h2>
+      <div class="max-w-2xl mb-12">
+        <p class="text-[#888] leading-relaxed text-lg mb-6">Every verified AI output produces a DecisionRecord: a decision ID, a UTC nanosecond timestamp, and a SHA-256 hash of the decision payload — chained to the previous record's hash.</p>
+        <p class="text-[#888] leading-relaxed text-lg">The chain enforces strict monotonic timestamps and cryptographic linkage. Any tampering — modification, insertion, deletion — invalidates all subsequent records. Verification is a single function call.</p>
+      </div>
+      <div class="card p-6 font-mono text-sm text-[#888] leading-relaxed overflow-x-auto">
+        <div class="text-[#444] mb-2"># Create a record</div>
+        <div>record, err = create_decision_record(</div>
+        <div class="pl-4">record_id=<span class="text-[#e8a020]">"decision-001"</span>,</div>
+        <div class="pl-4">decision_data=<span class="text-[#e8a020]">b"AI output bytes"</span>,</div>
+        <div class="pl-4">previous_record=<span class="text-[#e8a020]">None</span>,</div>
+        <div>)</div>
+        <div class="mt-4 text-[#444]"># Validate the chain</div>
+        <div>valid, err = validate_chain(chain)</div>
+        <div class="text-[#e8a020] mt-1">assert valid is True</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Principles -->
+  <section id="principles" class="py-28 px-6">
+    <div class="max-w-5xl mx-auto">
+      <p class="mono text-xs tracking-widest text-[#444] uppercase mb-4">05 / Principles</p>
+      <h2 class="text-3xl font-light text-white mb-12">Non-negotiable constraints.</h2>
+      <div class="grid md:grid-cols-2 gap-px bg-[#181818]">
+        <div class="card p-8">
+          <p class="mono text-xs gold uppercase tracking-wide mb-3">Fail closed</p>
+          <p class="text-[#888] text-sm leading-relaxed">If verification cannot complete, the output is rejected. No partial acceptance. No silent degradation. No fallback.</p>
+        </div>
+        <div class="card p-8">
+          <p class="mono text-xs gold uppercase tracking-wide mb-3">No implicit trust</p>
+          <p class="text-[#888] text-sm leading-relaxed">Each layer validates its inputs independently. Trust is never inherited from an upstream component.</p>
+        </div>
+        <div class="card p-8">
+          <p class="mono text-xs gold uppercase tracking-wide mb-3">Deterministic</p>
+          <p class="text-[#888] text-sm leading-relaxed">Same input, same registry, same output. Always. A probabilistic verification system is not verification.</p>
+        </div>
+        <div class="card p-8">
+          <p class="mono text-xs gold uppercase tracking-wide mb-3">Evidence-bound</p>
+          <p class="text-[#888] text-sm leading-relaxed">No result exists without evidence. Every detection references specific inputs. Every explanation references specific evidence.</p>
+        </div>
+        <div class="card p-8">
+          <p class="mono text-xs gold uppercase tracking-wide mb-3">Versioned registry</p>
+          <p class="text-[#888] text-sm leading-relaxed">Unknown patterns cannot be inferred. The registry version is a hard constraint at every layer. Mismatches fail the chain.</p>
+        </div>
+        <div class="card p-8">
+          <p class="mono text-xs gold uppercase tracking-wide mb-3">Stateless protocol</p>
+          <p class="text-[#888] text-sm leading-relaxed">ZTI defines verification rules. Callers manage state. The protocol has no opinions about storage, routing, or orchestration.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Whitepaper CTA -->
+  <section id="whitepaper" class="py-36 px-6" style="background:#0a0a0a;">
+    <div class="max-w-5xl mx-auto text-center">
+      <p class="mono text-xs tracking-widest text-[#444] uppercase mb-6">Full specification</p>
+      <h2 class="text-5xl font-light text-white mb-6">The ZTI Whitepaper</h2>
+      <p class="text-[#888] text-lg font-light mb-12 max-w-xl mx-auto">The complete protocol definition: problem, insight, architecture, integrity layer, design principles, use cases, and future direction.</p>
+      <a href="../whitepaper/zti-whitepaper.md" class="mono text-sm px-10 py-4 border border-[#e8a020] text-[#e8a020] hover:bg-[#e8a020] hover:text-black transition-all inline-block">Read the Whitepaper →</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-8 px-6 border-t border-[#181818]">
+    <div class="max-w-5xl mx-auto flex justify-between items-center">
+      <span class="mono text-xs text-[#333]">Zero Trust Intelligence (ZTI) · Public Domain · v1.0</span>
+      <span class="mono text-xs text-[#333]">Don't trust AI. Verify it.</span>
+    </div>
+  </footer>
+
+</body>
+</html>

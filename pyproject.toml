@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zti"
+version = "1.0.0"
+description = "Zero Trust Intelligence — deterministic verification protocol for AI systems"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+keywords = ["ai", "verification", "integrity", "zero-trust", "deterministic"]
+
+[tool.setuptools.packages.find]
+include = ["zti*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"
