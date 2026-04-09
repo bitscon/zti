@@ -28,6 +28,7 @@
         <a href="#problem" class="hover:text-white transition-colors">Problem</a>
         <a href="#architecture" class="hover:text-white transition-colors">Architecture</a>
         <a href="#integrity" class="hover:text-white transition-colors">Integrity</a>
+        <a href="#lineage" class="hover:text-white transition-colors">Lineage</a>
         <a href="#principles" class="hover:text-white transition-colors">Principles</a>
         <a href="#whitepaper" class="hover:text-white transition-colors">Whitepaper</a>
       </div>
@@ -37,16 +38,17 @@
   <!-- Hero -->
   <section class="border-t-0 py-36 px-6">
     <div class="max-w-5xl mx-auto">
-      <p class="mono text-xs tracking-widest text-[#444] uppercase mb-10">Protocol v1.0 · April 2026 · Public Domain</p>
+      <p class="mono text-xs tracking-widest text-[#444] uppercase mb-10">Protocol v1.0 · April 2026 · MIT License</p>
       <h1 class="text-6xl md:text-8xl font-light text-white leading-none tracking-tight mb-8">
         Zero Trust<br /><span class="gold">Intelligence</span>
       </h1>
-      <p class="text-2xl md:text-3xl font-light text-[#888] mb-14 max-w-2xl leading-relaxed">
+      <p class="text-2xl md:text-3xl font-light text-[#888] mb-4 max-w-2xl leading-relaxed">
         Don't trust AI.<br />Verify it.
       </p>
+      <p class="mono text-xs text-[#444] mb-14">Author: Chad McCormack · © 2026 Chad McCormack</p>
       <div class="flex gap-4 flex-wrap">
         <a href="#whitepaper" class="mono text-sm px-7 py-3 border border-[#e8a020] text-[#e8a020] hover:bg-[#e8a020] hover:text-black transition-all">Read the Whitepaper →</a>
-        <a href="https://github.com/zerotrustintelligence" class="mono text-sm px-7 py-3 border border-[#2a2a2a] text-[#555] hover:border-white hover:text-white transition-all">GitHub</a>
+        <a href="https://github.com/bitscon/zerotrustintelligence" class="mono text-sm px-7 py-3 border border-[#2a2a2a] text-[#555] hover:border-white hover:text-white transition-all">GitHub</a>
       </div>
     </div>
   </section>
@@ -58,7 +60,7 @@
       <h2 class="text-3xl font-light text-white mb-10">AI is probabilistic. Trust is implicit. Verification is absent.</h2>
       <div class="grid md:grid-cols-2 gap-px bg-[#181818]">
         <div class="card p-8">
-          <p class="mono text-xs gold uppercase tracking-wide mb-4">It halluccinates</p>
+          <p class="mono text-xs gold uppercase tracking-wide mb-4">It hallucinates</p>
           <p class="text-[#888] text-sm leading-relaxed">AI outputs are plausible, not correct. No fine-tuning eliminates this. The mechanism is statistical inference — correctness is not the objective function.</p>
         </div>
         <div class="card p-8">
@@ -71,7 +73,7 @@
         </div>
         <div class="card p-8">
           <p class="mono text-xs gold uppercase tracking-wide mb-4">No audit trail</p>
-          <p class="text-[#888] text-sm leading-relaxed">No existing system produces a deterministic, tamper-evident record of every AI output and its verification result. Failures are discovered after impact.</p>
+          <p class="text-[#888] text-sm leading-relaxed">No existing system produces a deterministic, tamper-evident record of every AI output, its verification result, and who approved it. Failures are discovered after impact.</p>
         </div>
       </div>
     </div>
@@ -94,11 +96,11 @@
   <section id="architecture" class="py-28 px-6">
     <div class="max-w-5xl mx-auto">
       <p class="mono text-xs tracking-widest text-[#444] uppercase mb-4">03 / Architecture</p>
-      <h2 class="text-3xl font-light text-white mb-4">Five layers. Each validates the previous. All-or-nothing.</h2>
+      <h2 class="text-3xl font-light text-white mb-4">Six layers. Each validates independently. All-or-nothing.</h2>
       <p class="text-[#888] mb-14 text-lg font-light">The chain does not degrade gracefully. If any layer fails, the output is rejected.</p>
 
       <div class="mono text-sm text-[#555] mb-10 text-center tracking-wide">
-        Registry → Detection → Explainability → Validation → Integrity
+        Registry → Detection → Explainability → Validation → Integrity → Lineage
       </div>
 
       <div class="space-y-px">
@@ -137,6 +139,13 @@
             <p class="text-[#888] text-sm leading-relaxed">Every verified decision is recorded in a hash-chained, tamper-evident log. Any modification, insertion, or deletion is detectable. The chain grows monotonically.</p>
           </div>
         </div>
+        <div class="arch-box p-6 flex gap-8 items-start">
+          <span class="gold mono text-xs shrink-0 w-6">06</span>
+          <div>
+            <h3 class="text-white font-medium mb-2">Lineage</h3>
+            <p class="text-[#888] text-sm leading-relaxed">Cryptographically bound approval events — who approved or rejected each verified decision, when. Each entry is independently tamper-evident. Sequences are validated for monotonic order and hash integrity.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -164,10 +173,35 @@
     </div>
   </section>
 
-  <!-- Principles -->
-  <section id="principles" class="py-28 px-6">
+  <!-- Lineage Layer -->
+  <section id="lineage" class="py-28 px-6">
     <div class="max-w-5xl mx-auto">
-      <p class="mono text-xs tracking-widest text-[#444] uppercase mb-4">05 / Principles</p>
+      <p class="mono text-xs tracking-widest text-[#444] uppercase mb-4">05 / The Lineage Layer</p>
+      <h2 class="text-3xl font-light text-white mb-8">Cryptographic proof of every approval.</h2>
+      <div class="max-w-2xl mb-12">
+        <p class="text-[#888] leading-relaxed text-lg mb-6">Every approval decision produces an ApprovalLineageEntry: an entry ID, the decision record it covers, the approver's identity, the action taken, and a UTC nanosecond timestamp — bound together in a SHA-256 hash.</p>
+        <p class="text-[#888] leading-relaxed text-lg">Any modification to any field — approver ID, decision record ID, action, timestamp — invalidates the entry hash. Sequences are validated for strict monotonic order. Backdating is detectable.</p>
+      </div>
+      <div class="card p-6 font-mono text-sm text-[#888] leading-relaxed overflow-x-auto">
+        <div class="text-[#444] mb-2"># Record an approval event</div>
+        <div>entry, err = create_lineage_entry(</div>
+        <div class="pl-4">entry_id=<span class="text-[#e8a020]">"approval-001"</span>,</div>
+        <div class="pl-4">decision_record_id=<span class="text-[#e8a020]">"decision-001"</span>,</div>
+        <div class="pl-4">approver_id=<span class="text-[#e8a020]">"reviewer@domain.com"</span>,</div>
+        <div class="pl-4">approval_action=<span class="text-[#e8a020]">APPROVAL_ACTION_APPROVE</span>,</div>
+        <div class="pl-4">timestamp_ns=<span class="text-[#e8a020]">1_000_000_001</span>,</div>
+        <div>)</div>
+        <div class="mt-4 text-[#444]"># Validate the sequence</div>
+        <div>valid, err = validate_lineage((entry,))</div>
+        <div class="text-[#e8a020] mt-1">assert valid is True</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Principles -->
+  <section id="principles" class="py-28 px-6" style="background:#0a0a0a;">
+    <div class="max-w-5xl mx-auto">
+      <p class="mono text-xs tracking-widest text-[#444] uppercase mb-4">06 / Principles</p>
       <h2 class="text-3xl font-light text-white mb-12">Non-negotiable constraints.</h2>
       <div class="grid md:grid-cols-2 gap-px bg-[#181818]">
         <div class="card p-8">
@@ -184,7 +218,7 @@
         </div>
         <div class="card p-8">
           <p class="mono text-xs gold uppercase tracking-wide mb-3">Evidence-bound</p>
-          <p class="text-[#888] text-sm leading-relaxed">No result exists without evidence. Every detection references specific inputs. Every explanation references specific evidence.</p>
+          <p class="text-[#888] text-sm leading-relaxed">No result exists without evidence. Every detection references specific inputs. Every approval references a specific decision record.</p>
         </div>
         <div class="card p-8">
           <p class="mono text-xs gold uppercase tracking-wide mb-3">Versioned registry</p>
@@ -199,11 +233,11 @@
   </section>
 
   <!-- Whitepaper CTA -->
-  <section id="whitepaper" class="py-36 px-6" style="background:#0a0a0a;">
+  <section id="whitepaper" class="py-36 px-6">
     <div class="max-w-5xl mx-auto text-center">
       <p class="mono text-xs tracking-widest text-[#444] uppercase mb-6">Full specification</p>
       <h2 class="text-5xl font-light text-white mb-6">The ZTI Whitepaper</h2>
-      <p class="text-[#888] text-lg font-light mb-12 max-w-xl mx-auto">The complete protocol definition: problem, insight, architecture, integrity layer, design principles, use cases, and future direction.</p>
+      <p class="text-[#888] text-lg font-light mb-12 max-w-xl mx-auto">The complete protocol definition: problem, insight, architecture, integrity layer, lineage layer, design principles, use cases, and future direction.</p>
       <a href="../whitepaper/zti-whitepaper.md" class="mono text-sm px-10 py-4 border border-[#e8a020] text-[#e8a020] hover:bg-[#e8a020] hover:text-black transition-all inline-block">Read the Whitepaper →</a>
     </div>
   </section>
@@ -211,7 +245,7 @@
   <!-- Footer -->
   <footer class="py-8 px-6 border-t border-[#181818]">
     <div class="max-w-5xl mx-auto flex justify-between items-center">
-      <span class="mono text-xs text-[#333]">Zero Trust Intelligence (ZTI) · Public Domain · v1.0</span>
+      <span class="mono text-xs text-[#333]">Zero Trust Intelligence (ZTI) · © 2026 Chad McCormack · MIT License · v1.0</span>
       <span class="mono text-xs text-[#333]">Don't trust AI. Verify it.</span>
     </div>
   </footer>

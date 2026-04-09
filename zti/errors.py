@@ -1,8 +1,11 @@
 """
-Zero Trust Intelligence (ZTI) — Reference Protocol Implementation
+Zero Trust Intelligence (ZTI) — Error Code Definitions
 
-This module defines deterministic verification and integrity rules for AI systems.
-All logic is fail-closed and execution-free.
+Author: Chad McCormack
+© 2026 Chad McCormack
+
+Deterministic, fail-closed verification and integrity model for AI systems.
+This module contains no execution logic and serves as a validation layer only.
 """
 
 from __future__ import annotations
@@ -54,9 +57,21 @@ class IntegrityErrorCode(str, Enum):
     HASH_MISMATCH = "HASH_MISMATCH"
 
 
+class LineageErrorCode(str, Enum):
+    """Error codes returned by the approval lineage layer."""
+
+    INVALID_ENTRY = "LINEAGE_INVALID_ENTRY"
+    INVALID_ACTION = "LINEAGE_INVALID_ACTION"
+    VERSION_MISMATCH = "LINEAGE_VERSION_MISMATCH"
+    EMPTY = "LINEAGE_EMPTY"
+    TIMESTAMP_REGRESSION = "LINEAGE_TIMESTAMP_REGRESSION"
+    HASH_MISMATCH = "LINEAGE_HASH_MISMATCH"
+
+
 __all__ = [
     "DetectionErrorCode",
     "ValidationErrorCode",
     "ExplainabilityErrorCode",
     "IntegrityErrorCode",
+    "LineageErrorCode",
 ]

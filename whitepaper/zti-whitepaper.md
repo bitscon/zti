@@ -1,6 +1,10 @@
 # Zero Trust Intelligence (ZTI)
 ## A Protocol for Verifiable AI Systems
 
+**Author:** Chad McCormack  
+**© 2026 Chad McCormack**  
+*(Future ownership may be assigned to a legal entity)*
+
 *Version 1.0 — April 2026*
 
 ---
@@ -82,7 +86,7 @@ This is an architectural constraint, not a guideline. Every component in a ZTI s
 ## 4. Architecture
 
 ```
-Registry → Detection → Explainability → Validation → Integrity
+Registry → Detection → Explainability → Validation → Integrity → Lineage
 ```
 
 ### 4.1 Registry
@@ -148,6 +152,28 @@ The chain enforces:
 
 Any tampering with any record invalidates the entire chain from that point forward.
 
+### 4.6 Lineage
+
+The lineage layer records who approved or rejected each verified decision, when, and in what order.
+
+Each lineage entry contains:
+
+- A unique entry ID
+- The ID of the decision record being approved
+- The approver's identity
+- The approval action (approve or reject)
+- A UTC nanosecond timestamp
+- A SHA-256 hash binding all fields
+
+The lineage layer is stateless. It does not chain entries to each other. Instead, each entry is independently tamper-evident: any modification to the entry_id, decision_record_id, approver_id, approval_action, or timestamp is immediately detectable by recomputing the entry_hash.
+
+Sequences of lineage entries are validated for:
+
+- **Non-empty input** — an empty approval log is an unverified decision
+- **Field validity** — all required fields present and well-formed
+- **Monotonic timestamps** — approval events cannot be backdated relative to each other
+- **Hash integrity** — each entry's hash is independently recomputable
+
 ---
 
 ## 5. Design Principles
@@ -158,7 +184,7 @@ If verification cannot complete, the output is rejected. This applies at every l
 
 ### 5.2 No Implicit Trust
 
-No component trusts any other component by default. The registry validates its own structure at load time. The detection layer validates the registry before running. The explainability layer validates detected patterns before generating artifacts. The integrity layer validates each record before appending.
+No component trusts any other component by default. The registry validates its own structure at load time. The detection layer validates the registry before running. The explainability layer validates detected patterns before generating artifacts. The integrity layer validates each record before appending. The lineage layer validates each entry independently.
 
 ### 5.3 Determinism
 
@@ -166,15 +192,15 @@ Every operation is deterministic. Sorting is explicit. Hash inputs are field-sep
 
 ### 5.4 Evidence Binding
 
-No result exists without evidence. Every detected pattern references the specific inputs that produced it. Every explanation artifact references specific evidence. Evidence is validated before results are accepted.
+No result exists without evidence. Every detected pattern references the specific inputs that produced it. Every explanation artifact references specific evidence. Every integrity record references the specific payload it covers. Every lineage entry references the specific decision record it approves.
 
 ### 5.5 Versioned, Closed Registry
 
-The registry is closed. Unknown patterns cannot be inferred. Unknown signals are not accepted. The version string is a hard constraint at every layer.
+The registry is closed. Unknown patterns cannot be inferred. Unknown signals are not accepted. The version string is a hard constraint at every layer. Mismatches fail the chain.
 
 ### 5.6 Stateless Protocol
 
-ZTI defines the verification rules. It does not define where or when they are applied. The integrity chain is the only stateful component, and its statefulness is explicit and append-only. Callers manage chain storage.
+ZTI defines the verification rules. It does not define where or when they are applied. The integrity chain and lineage entries are the only stateful artifacts, and their statefulness is explicit and append-only. Callers manage storage.
 
 ---
 
@@ -194,15 +220,15 @@ The analogy is structural, not cryptographic in the blockchain sense. ZTI does n
 
 ### 7.1 Enterprise AI Governance
 
-Organizations deploying AI in regulated environments need deterministic audit trails. ZTI provides a complete record of every AI output that was verified, the patterns detected, the signals that triggered detection, and the registry version under which verification occurred.
+Organizations deploying AI in regulated environments need deterministic audit trails. ZTI provides a complete record of every AI output that was verified, the patterns detected, the signals that triggered detection, the registry version under which verification occurred, and the approval events that followed.
 
 ### 7.2 GRC and Compliance
 
-Governance, Risk, and Compliance frameworks require that AI decisions be explainable and auditable. ZTI's explanation artifacts satisfy these requirements structurally — they are produced by the protocol, not retrofitted after the fact.
+Governance, Risk, and Compliance frameworks require that AI decisions be explainable and auditable. ZTI's explanation artifacts satisfy these requirements structurally — they are produced by the protocol, not retrofitted after the fact. The lineage layer adds a tamper-evident record of who reviewed each decision and what action they took.
 
 ### 7.3 Agentic Systems
 
-AI agents that take autonomous actions are high-risk without verification. ZTI can be applied at the action boundary: any action proposed by an agent passes through the verification chain before execution. Agents that produce unverifiable output are stopped.
+AI agents that take autonomous actions are high-risk without verification. ZTI can be applied at the action boundary: any action proposed by an agent passes through the verification chain before execution. Agents that produce unverifiable output are stopped. Approval lineage provides a traceable record of human oversight.
 
 ### 7.4 Multi-Model Pipelines
 
@@ -210,7 +236,7 @@ In systems where multiple AI models interact, ZTI provides a verification layer 
 
 ### 7.5 Adversarial Detection
 
-The integrity chain provides a tamper-evident record of all decisions. Any attempt to retroactively modify, inject, or delete a decision is detectable by chain validation. This applies to both external attackers and to the AI system itself.
+The integrity chain provides a tamper-evident record of all decisions. Any attempt to retroactively modify, inject, or delete a decision is detectable by chain validation. The lineage layer extends this to approval events: any attempt to forge or backdate an approval is detectable by hash recomputation.
 
 ---
 
@@ -247,11 +273,15 @@ Current ZTI implementations operate post-inference. Future work may explore veri
 
 In distributed systems, the integrity chain can be federated — multiple independent verification nodes that must agree before a decision is accepted. This extends ZTI's fail-closed model to the verification infrastructure itself.
 
+### 9.5 Lineage Resolution
+
+Future work will define deterministic ordering rules for approval lineage in systems where multiple reviewers act concurrently, and admissibility rules for partial or conflicting approval sequences.
+
 ---
 
 ## 10. Conclusion
 
-AI is not going to become trustworthy through calibration alone. The probabilistic nature of the technology means that no amount of fine-tuning eliminates the possibility of error. The correct response is not to improve the AI until it is trustworthy. The correct response is to build systems that verify AI outputs deterministically, record them immutably, and fail closed when verification cannot be completed.
+AI is not going to become trustworthy through calibration alone. The probabilistic nature of the technology means that no amount of fine-tuning eliminates the possibility of error. The correct response is not to improve the AI until it is trustworthy. The correct response is to build systems that verify AI outputs deterministically, record them immutably, track approval lineage cryptographically, and fail closed when verification cannot be completed.
 
 ZTI is that system.
 
@@ -261,5 +291,6 @@ Don't trust AI. Verify it.
 
 ---
 
-*Zero Trust Intelligence (ZTI) — Public Protocol Reference*
-*Released without restriction. Implement freely.*
+*Zero Trust Intelligence (ZTI)*  
+*Author: Chad McCormack — © 2026 Chad McCormack*  
+*Released under MIT License. Implement freely.*

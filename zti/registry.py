@@ -1,8 +1,11 @@
 """
-Zero Trust Intelligence (ZTI) — Reference Protocol Implementation
+Zero Trust Intelligence (ZTI) — Pattern Registry
 
-This module defines deterministic verification and integrity rules for AI systems.
-All logic is fail-closed and execution-free.
+Author: Chad McCormack
+© 2026 Chad McCormack
+
+Deterministic, fail-closed verification and integrity model for AI systems.
+This module contains no execution logic and serves as a validation layer only.
 """
 
 from __future__ import annotations
