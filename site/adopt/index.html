@@ -24,7 +24,7 @@
     .step-num { font-family: 'IBM Plex Mono', monospace; color: var(--accent); font-size: 0.7rem; min-width: 1.5rem; }
     .boundary-line { border-left: 2px solid var(--accent); }
     .tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: #6f6f6f; }
-    .zti-global-nav { position: sticky; top: 0; z-index: 60; border-bottom: 1px solid var(--border); background: var(--bg); width: 100%; padding: 1rem 1.5rem; display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .zti-global-nav { position: sticky; top: 0; z-index: 60; border-bottom: 1px solid var(--border); background: var(--bg); width: 100%; padding: 1rem 1.5rem; display: flex; justify-content: center; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
     .zti-global-nav a { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; text-decoration: none; color: var(--muted); opacity: 0.7; transition: opacity 0.2s ease, color 0.2s ease; }
     .zti-global-nav a:hover { opacity: 1; color: var(--text); }
     .zti-global-nav a.active { opacity: 1; color: var(--accent); font-weight: 600; }
@@ -40,7 +40,6 @@
   <nav class="zti-global-nav">
     <a href="/" data-nav="protocol">Protocol</a>
     <a href="/adopt" data-nav="adopt">Adopt</a>
-    <a href="/core" data-nav="core">Core</a>
   </nav>
 
   <!-- HERO -->
@@ -569,8 +568,6 @@
 
     let current = "protocol";
     if (path.startsWith("/adopt")) current = "adopt";
-    if (path.startsWith("/core")) current = "core";
-
     document.querySelectorAll("[data-nav]").forEach(link => {
       if (link.dataset.nav === current) {
         link.classList.add("active");

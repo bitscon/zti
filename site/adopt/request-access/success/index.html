@@ -15,7 +15,7 @@
       --accent: #f5a623;
     }
     body { margin: 0; background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-    .zti-global-nav { position: sticky; top: 0; z-index: 60; border-bottom: 1px solid var(--border); background: var(--bg); width: 100%; padding: 1rem 1.5rem; display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .zti-global-nav { position: sticky; top: 0; z-index: 60; border-bottom: 1px solid var(--border); background: var(--bg); width: 100%; padding: 1rem 1.5rem; display: flex; justify-content: center; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
     .zti-global-nav a { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; text-decoration: none; color: var(--muted); opacity: 0.7; transition: opacity 0.2s ease, color 0.2s ease; }
     .zti-global-nav a:hover { opacity: 1; color: var(--text); }
     .zti-global-nav a.active { opacity: 1; color: var(--accent); font-weight: 600; }
@@ -35,7 +35,6 @@
   <nav class="zti-global-nav">
     <a href="/" data-nav="protocol">Protocol</a>
     <a href="/adopt" data-nav="adopt">Adopt</a>
-    <a href="/core" data-nav="core">Core</a>
   </nav>
 
   <section class="success-shell">
