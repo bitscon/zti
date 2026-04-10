@@ -14,14 +14,25 @@
       --muted: #9a9a9a;
       --accent: #f5a623;
     }
-    body { background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; }
-    .mono { font-family: 'IBM Plex Mono', monospace; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .mono { font-family: 'IBM Plex Mono', 'SFMono-Regular', Menlo, Consolas, monospace; }
     .zti-global-nav { position: sticky; top: 0; z-index: 60; border-bottom: 1px solid var(--border); background: var(--bg); width: 100%; padding: 1rem 1.5rem; display: flex; gap: 1.5rem; flex-wrap: wrap; }
     .zti-global-nav a { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; text-decoration: none; color: var(--muted); opacity: 0.7; transition: opacity 0.2s ease, color 0.2s ease; }
     .zti-global-nav a:hover { opacity: 1; color: var(--text); }
     .zti-global-nav a.active { opacity: 1; color: var(--accent); font-weight: 600; }
+    .core-hero, .core-boundary, .core-capabilities { max-width: 52rem; margin: 0 auto; padding: 2rem 1.5rem; }
+    .core-hero { padding-top: 4.5rem; }
+    .core-hero h1 { margin: 0 0 0.75rem; font-size: clamp(2rem, 4.5vw, 3.25rem); font-weight: 400; letter-spacing: 0.01em; }
+    .core-hero p { margin: 0; color: var(--muted); font-size: 1.125rem; }
+    .core-boundary { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface); }
+    .core-boundary p { margin: 0; color: #c8c8c8; line-height: 1.75; }
+    .core-capabilities h2 { margin: 0 0 0.75rem; font-size: 1.25rem; font-weight: 500; }
+    .core-capabilities ul { margin: 0; padding-left: 1.25rem; color: var(--muted); line-height: 1.7; }
+    .core-capabilities li { margin: 0.35rem 0; }
     @media (max-width: 640px) {
       .zti-global-nav { padding: 0.75rem 1rem; gap: 1rem; }
+      .core-hero, .core-boundary, .core-capabilities { padding-left: 1rem; padding-right: 1rem; }
+      .core-hero { padding-top: 3rem; }
     }
   </style>
 </head>
