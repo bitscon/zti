@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adopt ZTI | Zero Trust Intelligence — Decision Verification Protocol</title>
-  <meta name="description" content="Zero Trust Intelligence (ZTI) is a decision verification protocol and control layer between stochastic AI generation and real-world execution. Learn how to adopt ZTI in your systems." />
+  <title>Adopt ZTI | Applied Scenarios for Decision Verification</title>
+  <meta name="description" content="Applied scenarios for adopting Zero Trust Intelligence (ZTI) across enterprise systems where AI-generated proposals can trigger execution." />
   <script src="/tailwindcss.js"></script>
   <style>
     :root {
@@ -16,22 +16,74 @@
       --muted: #9a9a9a;
       --accent: #f5a623;
     }
-    body { background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; }
+    body { background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; margin: 0; }
     .mono { font-family: 'IBM Plex Mono', monospace; }
-    .card { background: var(--surface); border: 1px solid var(--border); }
     .accent { color: var(--accent); }
     section { border-top: 1px solid var(--border); }
-    .step-num { font-family: 'IBM Plex Mono', monospace; color: var(--accent); font-size: 0.7rem; min-width: 1.5rem; }
-    .boundary-line { border-left: 2px solid var(--accent); }
-    .tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: #6f6f6f; }
+
     .zti-global-nav { position: sticky; top: 0; z-index: 60; border-bottom: 1px solid var(--border); background: var(--bg); width: 100%; padding: 1rem 1.5rem; display: flex; justify-content: center; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
     .zti-global-nav a { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; text-decoration: none; color: var(--muted); opacity: 0.7; transition: opacity 0.2s ease, color 0.2s ease; }
     .zti-global-nav a:hover { opacity: 1; color: var(--text); }
     .zti-global-nav a.active { opacity: 1; color: var(--accent); font-weight: 600; }
-    .zti-reference a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s ease; }
-    .zti-reference a:hover { border-color: var(--accent); }
+
+    .ad-shell { max-width: 76rem; margin: 0 auto; padding: 0 1.5rem; }
+    .ad-tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: #6f6f6f; }
+
+    .ad-hero { padding: 6.5rem 0 5.5rem; border-top: 0; }
+    .ad-hero h1 { margin: 0 0 1rem; font-size: clamp(2rem, 5vw, 4rem); font-weight: 300; line-height: 1.12; letter-spacing: -0.01em; }
+    .ad-hero p { margin: 0; max-width: 56rem; color: var(--muted); line-height: 1.75; font-size: 1.02rem; }
+
+    .ad-scenario { padding: 5rem 0; }
+    .ad-scenario-alt { background: var(--surface2); }
+    .ad-scenario h2 { margin: 0 0 0.8rem; font-size: clamp(1.5rem, 2.8vw, 2.2rem); font-weight: 350; }
+    .ad-scenario-intro { margin: 0 0 2rem; color: #a8a8a8; max-width: 56rem; line-height: 1.72; }
+
+    .ad-pattern { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+    .ad-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.2rem 1.1rem 1.25rem;
+      min-height: 12rem;
+    }
+    .ad-block h3 {
+      margin: 0 0 0.75rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .ad-block p { margin: 0; color: var(--muted); line-height: 1.7; font-size: 0.93rem; }
+
+    .ad-close { padding: 5.25rem 0 6rem; text-align: center; background: var(--surface2); }
+    .ad-close h2 { margin: 0 0 0.75rem; font-size: clamp(1.4rem, 2.7vw, 2rem); font-weight: 350; }
+    .ad-close p { margin: 0 auto 1.8rem; max-width: 44rem; color: var(--muted); line-height: 1.75; }
+    .ad-next {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      text-decoration: none;
+      padding: 0.72rem 1.4rem;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      transition: background 0.16s ease, color 0.16s ease;
+    }
+    .ad-next:hover { background: var(--accent); color: #000; }
+
+    .ad-footer { padding: 1.25rem 0 2.5rem; color: #5f5f5f; font-size: 0.8rem; text-align: center; }
+
+    @media (max-width: 960px) {
+      .ad-pattern { grid-template-columns: 1fr; }
+      .ad-block { min-height: 0; }
+    }
+
     @media (max-width: 640px) {
       .zti-global-nav { padding: 0.75rem 1rem; gap: 1rem; }
+      .ad-shell { padding: 0 1rem; }
+      .ad-hero { padding: 4.25rem 0 3.75rem; }
+      .ad-scenario { padding: 3.5rem 0; }
+      .ad-close { padding: 3.75rem 0 4.5rem; }
     }
   </style>
 </head>
@@ -42,525 +94,169 @@
     <a href="/adopt" data-nav="adopt">Adopt</a>
   </nav>
 
-  <!-- HERO -->
-  <section id="hero" class="border-t-0 px-6 py-28 md:py-36">
-    <div class="max-w-6xl mx-auto">
-      <p class="tag mb-8">/adopt · Version 1.0 · April 2026</p>
-      <h1 class="text-5xl md:text-7xl font-light leading-tight mb-6">
-        Zero Trust <span class="accent">Intelligence</span>
-      </h1>
-      <p class="text-2xl md:text-3xl text-[#c8c8c8] font-light mb-4">A Decision Verification Protocol for AI-Driven Systems</p>
-      <p class="text-xl text-[#e0e0e0] font-light mb-2">Don't trust AI. Verify it.</p>
-      <p class="text-xl text-[#e0e0e0] font-light mb-6">AI generates. ZTI verifies. Only verified decisions execute.</p>
-      <p class="text-base text-[#9a9a9a] max-w-2xl mb-10 leading-relaxed">
-        ZTI is a decision verification protocol and control layer between stochastic AI generation
-        and real-world execution. It does not make AI smarter. It defines when AI output is allowed to act.
-      </p>
-      <div class="flex flex-wrap gap-4">
-        <a href="#pilot" class="mono text-sm px-6 py-3 border border-[#f5a623] text-[#f5a623] hover:bg-[#f5a623] hover:text-black transition">Start a Pilot →</a>
-        <a href="/" class="mono text-sm px-6 py-3 border border-[#2a2a2a] text-[#a0a0a0] hover:text-white hover:border-white transition">Protocol Specification</a>
-        <a href="/adopt/demo" class="mono text-sm px-6 py-3 border border-[#2a2a2a] text-[#a0a0a0] hover:text-white hover:border-white transition">See It in Action →</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="px-6 py-12">
-    <div class="max-w-6xl mx-auto">
-      <div class="card p-6 zti-reference">
-        <p>
-          Understand the underlying protocol →
-          <a href="/">View ZTI Protocol</a>
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROBLEM -->
-  <section id="problem" class="px-6 py-24">
-    <div class="max-w-6xl mx-auto">
-      <p class="tag mb-4">1. The Problem</p>
-      <h2 class="text-3xl md:text-4xl font-light mb-4">
-        We are beginning to execute on AI output without a reliable decision boundary.
-      </h2>
-      <p class="text-[#9a9a9a] max-w-3xl mb-10 leading-relaxed">
-        AI systems are increasingly upstream of decisions that affect execution —
-        infrastructure changes, security enforcement, financial operations, automated workflows.
-        These outputs are produced probabilistically.
-      </p>
-      <div class="grid md:grid-cols-3 gap-4 mb-10">
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-3">Non-determinism</p>
-          <p class="text-[#9a9a9a] text-sm leading-relaxed">The same input may produce different outputs. Confidence is not consistency.</p>
-        </div>
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-3">Opaque Reasoning</p>
-          <p class="text-[#9a9a9a] text-sm leading-relaxed">The path from input to output is not fully inspectable. You cannot audit what you cannot trace.</p>
-        </div>
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-3">No Integrity Guarantees</p>
-          <p class="text-[#9a9a9a] text-sm leading-relaxed">Outputs can be altered without detection. There is no tamper-evident record by default.</p>
-        </div>
-      </div>
-      <div class="card p-6 max-w-3xl border-l-2" style="border-left-color: var(--accent);">
-        <p class="text-[#c8c8c8] italic">
-          "If it looks correct, it must be correct."<br>
-          <span class="text-[#6a6a6a] text-sm not-italic mt-2 block">That assumption does not scale.</span>
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- THE SHIFT -->
-  <section id="shift" class="px-6 py-24" style="background:var(--surface2);">
-    <div class="max-w-6xl mx-auto">
-      <p class="tag mb-4">2. Why AI Cannot Be Trusted</p>
-      <h2 class="text-3xl md:text-4xl font-light mb-4">AI output is not a decision.</h2>
-      <p class="text-2xl text-[#c8c8c8] font-light mb-8">A decision is something that can be proven.</p>
-      <div class="grid md:grid-cols-2 gap-8 max-w-4xl">
-        <div>
-          <p class="tag mb-4">Without ZTI</p>
-          <div class="card p-6">
-            <div class="mono text-sm text-[#6a6a6a] space-y-2">
-              <div>AI System</div>
-              <div class="pl-4 text-[#4a4a4a]">↓ unverified</div>
-              <div class="text-[#ff6b6b]">Execution Systems</div>
-            </div>
-            <p class="text-xs text-[#5a5a5a] mt-4 leading-relaxed">Proposal enters. Action executes. No verification contract. No sealed record. No enforcement boundary.</p>
-          </div>
-        </div>
-        <div>
-          <p class="tag mb-4">With ZTI</p>
-          <div class="card p-6" style="border-color: #2a2a2a;">
-            <div class="mono text-sm space-y-2">
-              <div class="text-[#9a9a9a]">AI System</div>
-              <div class="pl-4 text-[#5a5a5a]">↓ proposal</div>
-              <div class="text-[#f5a623]">ZTI Verification Layer</div>
-              <div class="pl-4 text-[#5a5a5a]">↓ verified artifact only</div>
-              <div class="text-[#9a9a9a]">Execution Systems</div>
-            </div>
-            <p class="text-xs text-[#5a5a5a] mt-4 leading-relaxed">Deterministic classification. Policy validation. Cryptographic seal. Fail-closed boundary. Tamper-evident record.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- THE LAYER -->
-  <section id="layer" class="px-6 py-24">
-    <div class="max-w-6xl mx-auto">
-      <p class="tag mb-4">3. The ZTI Approach</p>
-      <h2 class="text-3xl md:text-4xl font-light mb-4">ZTI is the deterministic decision verification layer.</h2>
-      <p class="text-[#9a9a9a] max-w-3xl mb-10 leading-relaxed">
-        ZTI does not constrain how AI thinks. It constrains what AI is allowed to do.
-      </p>
-      <div class="card p-6 mono text-sm text-[#a8a8a8] max-w-lg mb-10 leading-loose">
-        AI (stochastic generation layer)<br>
-        <span class="pl-4 text-[#5a5a5a]">↓</span><br>
-        <span class="text-[#f5a623]">ZTI (deterministic decision verification layer)</span><br>
-        <span class="pl-4 text-[#5a5a5a]">↓ verified decisions only</span><br>
-        Execution systems
-      </div>
-      <div class="grid md:grid-cols-2 gap-4 max-w-4xl">
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-4">AI</p>
-          <ul class="text-sm text-[#9a9a9a] space-y-2">
-            <li>Probabilistic and generative</li>
-            <li>Exploratory — useful for proposing options</li>
-            <li>Not a decision system</li>
-            <li class="text-[#6a6a6a] italic">A proposal system</li>
-          </ul>
-        </div>
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-4">ZTI</p>
-          <ul class="text-sm text-[#9a9a9a] space-y-2">
-            <li>Deterministic and reproducible</li>
-            <li>Restrictive — enforces execution contracts</li>
-            <li>Not an intelligence system</li>
-            <li class="text-[#6a6a6a] italic">A verification system</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- WHAT CHANGES IN PRACTICE -->
-  <section id="example" class="px-6 py-24">
-    <div class="max-w-6xl mx-auto">
-      <p class="tag mb-4">4. What Changes in Practice</p>
-      <h2 class="text-3xl font-light mb-4">AI proposes a Terraform change. What changes in practice?</h2>
-      <p class="text-[#9a9a9a] mb-10 max-w-3xl leading-relaxed">
-        The AI is not stopped. The pathway to unverified execution is.
-      </p>
-      <div class="grid md:grid-cols-2 gap-8 mb-10">
-        <div>
-          <p class="tag mb-4">Unsafe Proposal — Blocked</p>
-          <div class="space-y-2">
-            <div class="card p-4 border-l-2 border-[#ff6b6b]">
-              <p class="mono text-xs text-[#ff6b6b] mb-1">AI OUTPUT</p>
-              <p class="text-xs text-[#7a7a7a]">region: eu-central-1 · module: ec2-instance · count: 12</p>
-            </div>
-            <div class="card p-4">
-              <p class="mono text-xs text-[#f5a623] mb-1">ZTI CLASSIFICATION</p>
-              <p class="text-xs text-[#7a7a7a]">Matched: infrastructure-change ✓</p>
-            </div>
-            <div class="card p-4">
-              <p class="mono text-xs text-[#f5a623] mb-1">ZTI VALIDATION</p>
-              <p class="text-xs text-[#ff6b6b]">✗ region eu-central-1 not in approved set</p>
-            </div>
-            <div class="card p-4 border-l-2 border-[#ff6b6b]">
-              <p class="mono text-xs text-[#ff6b6b]">REJECTED — CONSTRAINT_VIOLATION</p>
-              <p class="text-xs text-[#5a5a5a] mt-1">Rejection artifact sealed. Execution system: no artifact received.</p>
-            </div>
-          </div>
-        </div>
-        <div>
-          <p class="tag mb-4">Compliant Proposal — Verified</p>
-          <div class="space-y-2">
-            <div class="card p-4 border-l-2 border-[#4ade80]">
-              <p class="mono text-xs text-[#4ade80] mb-1">AI OUTPUT</p>
-              <p class="text-xs text-[#7a7a7a]">region: us-east-1 · module: ec2-instance · count: 8</p>
-            </div>
-            <div class="card p-4">
-              <p class="mono text-xs text-[#f5a623] mb-1">ZTI VALIDATION</p>
-              <p class="text-xs text-[#4ade80]">✓ region ✓ module ✓ count ✓ approvals ✓ schema</p>
-            </div>
-            <div class="card p-4">
-              <p class="mono text-xs text-[#f5a623] mb-1">ZTI INTEGRITY</p>
-              <p class="text-xs text-[#7a7a7a]">Decision artifact sealed · chain_hash: f1a92cc3…</p>
-            </div>
-            <div class="card p-4 border-l-2 border-[#4ade80]">
-              <p class="mono text-xs text-[#4ade80]">VERIFIED — artifact forwarded</p>
-              <p class="text-xs text-[#5a5a5a] mt-1">Execution system receives the sealed artifact — not the raw AI output.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="grid md:grid-cols-3 gap-4 max-w-4xl">
-        <div class="card p-5">
-          <p class="mono text-xs uppercase accent mb-2">Audit Mode</p>
-          <p class="text-sm text-[#9a9a9a]">Observe, classify, validate, seal, and report — without blocking execution.</p>
-        </div>
-        <div class="card p-5">
-          <p class="mono text-xs uppercase accent mb-2">Enforcement Mode</p>
-          <p class="text-sm text-[#9a9a9a]">Execution boundary is fail-closed. Unverifiable outputs do not execute.</p>
-        </div>
-        <div class="card p-5">
-          <p class="mono text-xs uppercase accent mb-2">Audit Reconstruction</p>
-          <p class="text-sm text-[#9a9a9a]">What was proposed. What policy passed. Who approved. Which hash executed.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ARCHITECTURE OVERVIEW -->
-  <section id="architecture" class="px-6 py-24" style="background:var(--surface2);">
-    <div class="max-w-6xl mx-auto">
-      <p class="tag mb-4">5. Architecture Overview</p>
-      <h2 class="text-3xl font-light mb-4">Six layers. One boundary.</h2>
-      <p class="text-[#9a9a9a] max-w-3xl mb-8 leading-relaxed">
-        ZTI transforms AI proposals into verified decision artifacts through a deterministic pipeline.
-        ZTI does not require a complete model of all valid decisions —
-        only explicit constraints on what is allowed to execute.
-      </p>
-      <div class="card p-5 mono text-xs text-[#a8a8a8] max-w-2xl mb-8 leading-loose">
-        INPUT (AI Output) → Registry → Detection → Explainability → Validation → Integrity → Lineage → VERIFIED DECISION
-      </div>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-2">Pattern Registry</p>
-          <p class="text-sm text-[#9a9a9a] leading-relaxed">Contract of allowed decision classes, schemas, and constraints. Closed, explicit, and immutable during execution.</p>
-        </div>
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-2">Detection</p>
-          <p class="text-sm text-[#9a9a9a] leading-relaxed">Deterministic classification of a proposal into an allowed class. No inference. No probability.</p>
-        </div>
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-2">Explainability</p>
-          <p class="text-sm text-[#9a9a9a] leading-relaxed">Explicit evidence artifact for why the proposal matched. Every conclusion must be justified.</p>
-        </div>
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-2">Validation</p>
-          <p class="text-sm text-[#9a9a9a] leading-relaxed">Admissibility checks against declared rules — not a universal truth test. Ambiguity is treated as failure.</p>
-        </div>
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-2">Integrity</p>
-          <p class="text-sm text-[#9a9a9a] leading-relaxed">Tamper-evident sealing of the decision artifact. Cryptographically sealed and chained.</p>
-        </div>
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-2">Lineage</p>
-          <p class="text-sm text-[#9a9a9a] leading-relaxed">Provenance, approvals, and historical linkage. Every verified decision has a traceable history.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="next-step" class="px-6 py-24">
-    <div class="max-w-6xl mx-auto">
-      <p class="tag mb-4">6. Next Step</p>
-      <h2 class="text-3xl font-light mb-4">Select one workflow and implement the boundary.</h2>
-      <p class="text-[#9a9a9a] max-w-3xl leading-relaxed">
-        Move from architecture to execution by applying ZTI to one high-impact workflow, then expand from validated results.
+  <section class="ad-hero">
+    <div class="ad-shell">
+      <p class="ad-tag">/adopt · Applied Scenarios</p>
+      <h1>Where ZTI applies in enterprise operations.</h1>
+      <p>
+        This page maps the execution boundary to real operating systems where AI-generated proposals can trigger
+        infrastructure, security, financial, and service-impacting actions. The objective is straightforward:
+        define where unverified proposals are currently crossing into execution, then apply deterministic verification
+        before those actions are allowed to run.
       </p>
     </div>
   </section>
 
-  <!-- RISK: WITHOUT ZTI -->
-  <section id="risk" class="px-6 py-24" style="background:var(--surface2);">
-    <div class="max-w-6xl mx-auto">
-      <p class="tag mb-4">7. What Happens Without ZTI</p>
-      <h2 class="text-3xl font-light mb-4">The absence of an execution boundary has a shape.</h2>
-      <p class="text-[#9a9a9a] max-w-3xl mb-10 leading-relaxed">
-        Three classes of incident that occur when AI-driven automation has no verified execution boundary.
+  <section class="ad-scenario">
+    <div class="ad-shell">
+      <p class="ad-tag">Scenario 1</p>
+      <h2>Infrastructure Change Governance</h2>
+      <p class="ad-scenario-intro">
+        AI-assisted infrastructure proposals are increasingly entering CI/CD pipelines. This is often the first
+        high-impact pathway where an execution boundary is required.
       </p>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-3">Infrastructure Drift</p>
-          <p class="text-sm text-[#9a9a9a] leading-relaxed mb-4">
-            An AI agent scales production infrastructure. The proposal passes a linter and a summary review. It executes. Two hours later: 47 instances are running in an unapproved region, against a deprecated module with a known security configuration issue.
+      <div class="ad-pattern">
+        <article class="ad-block">
+          <h3>Context</h3>
+          <p>
+            Platform teams use AI to draft Terraform plans, deployment parameters, and environment updates across
+            production regions and shared services.
           </p>
-          <p class="text-xs text-[#5a5a5a]">Root cause: no layer evaluated the proposal against the declared execution contract before it reached infrastructure.</p>
-        </div>
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-3">Policy Bypass at Scale</p>
-          <p class="text-sm text-[#9a9a9a] leading-relaxed mb-4">
-            A security automation system acts on high-confidence AI classifications. Twelve revocations target active service accounts. The model confused a naming pattern. Production fails. The model's confidence score is not a verification contract.
+        </article>
+        <article class="ad-block">
+          <h3>Risk</h3>
+          <p>
+            Misclassified or policy-incompatible changes can execute at pipeline speed, creating configuration drift,
+            expanded blast radius, and delayed incident detection.
           </p>
-          <p class="text-xs text-[#5a5a5a]">Root cause: no independent verification layer between classification and execution.</p>
-        </div>
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-3">The Audit You Cannot Answer</p>
-          <p class="text-sm text-[#9a9a9a] leading-relaxed mb-4">
-            Auditor asks: what was proposed, what policy was it checked against, who authorized it, what artifact executed? Answer requires three days of cross-referencing Git, CI/CD logs, Slack, and tickets. Two approvals cannot be traced to a specific artifact.
+        </article>
+        <article class="ad-block">
+          <h3>ZTI Enforcement</h3>
+          <p>
+            ZTI verifies every proposal against declared infrastructure constraints before apply. Only sealed,
+            policy-valid artifacts are permitted to cross into execution systems.
           </p>
-          <p class="text-xs text-[#5a5a5a]">Root cause: no tamper-evident record produced at decision time.</p>
-        </div>
-      </div>
-      <div class="card p-6 max-w-3xl mt-8 border-l-2" style="border-left-color: var(--accent);">
-        <p class="text-[#c8c8c8]">Guardrails constrain generation. Observability records output. Human review catches what it catches. None of these is an execution boundary.</p>
+        </article>
       </div>
     </div>
   </section>
 
-  <!-- STAKEHOLDERS -->
-  <section id="stakeholders" class="px-6 py-24">
-    <div class="max-w-6xl mx-auto">
-      <p class="tag mb-4">8. Stakeholder Relevance</p>
-      <h2 class="text-3xl font-light mb-10">Who owns this problem and what ZTI answers for each.</h2>
-      <div class="grid md:grid-cols-2 gap-6">
-
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-4">Platform Engineering — CTO</p>
-          <div class="card p-4 mono text-xs text-[#7a7a7a] mb-4 leading-loose" style="background:var(--bg);">
-            User / API Request<br>↓<br>AI System (LLM / Agent)<br><span class="text-[#f5a623]">↓<br>ZTI Verification Layer &nbsp;&nbsp;← boundary</span><br>↓<br>Execution Systems
-          </div>
-          <ul class="text-sm text-[#9a9a9a] space-y-1">
-            <li>API gateways, agent runtimes, CI/CD pipelines, infra automation</li>
-            <li>Applied only to high-risk, actionable execution pathways</li>
-            <li>Cross-cutting layer owned jointly by platform engineering and security</li>
-            <li>Leverages existing policy engines, CI/CD gates, audit logging</li>
-          </ul>
-        </div>
-
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-4">Security — CISO</p>
-          <div class="grid grid-cols-2 gap-3 mb-4">
-            <div class="card p-3" style="background:var(--bg);">
-              <p class="mono text-xs text-[#4ade80] mb-2">Protects Against</p>
-              <ul class="text-xs text-[#7a7a7a] space-y-1">
-                <li>Unauthorized AI execution</li>
-                <li>Policy violations</li>
-                <li>Unverified decision pathways</li>
-              </ul>
-            </div>
-            <div class="card p-3" style="background:var(--bg);">
-              <p class="mono text-xs text-[#ff6b6b] mb-2">Does Not Protect Against</p>
-              <ul class="text-xs text-[#7a7a7a] space-y-1">
-                <li>Compromised AI models</li>
-                <li>Incorrect validation logic</li>
-                <li>Malicious policy definitions</li>
-              </ul>
-            </div>
-          </div>
-          <p class="text-sm text-[#7a7a7a] italic">ZTI does not eliminate risk. It constrains where risk is allowed to materialize.</p>
-        </div>
-
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-4">Finance — CFO</p>
-          <p class="text-sm text-[#9a9a9a] mb-4 italic">Without a verification layer, AI adoption increases operational risk faster than it increases efficiency.</p>
-          <div class="grid grid-cols-2 gap-3">
-            <div class="card p-3 text-center" style="background:var(--bg);">
-              <p class="text-xs text-[#6a6a6a]">Reduces</p>
-              <p class="text-sm text-[#c8c8c8] mt-1">Incident cost</p>
-            </div>
-            <div class="card p-3 text-center" style="background:var(--bg);">
-              <p class="text-xs text-[#6a6a6a]">Reduces</p>
-              <p class="text-sm text-[#c8c8c8] mt-1">Compliance cost</p>
-            </div>
-            <div class="card p-3 text-center" style="background:var(--bg);">
-              <p class="text-xs text-[#6a6a6a]">Reduces</p>
-              <p class="text-sm text-[#c8c8c8] mt-1">Review overhead</p>
-            </div>
-            <div class="card p-3 text-center" style="background:var(--bg);">
-              <p class="text-xs text-[#6a6a6a]">Enables</p>
-              <p class="text-sm text-[#c8c8c8] mt-1">AI at scale</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-4">Legal — CLO</p>
-          <div class="grid grid-cols-2 gap-3 mb-4">
-            <div class="card p-3" style="background:var(--bg);">
-              <p class="mono text-xs text-[#4ade80] mb-2">ZTI Provides</p>
-              <ul class="text-xs text-[#7a7a7a] space-y-1">
-                <li>Auditability</li>
-                <li>Traceability</li>
-                <li>Constraint enforcement</li>
-              </ul>
-            </div>
-            <div class="card p-3" style="background:var(--bg);">
-              <p class="mono text-xs text-[#ff6b6b] mb-2">ZTI Does Not</p>
-              <ul class="text-xs text-[#7a7a7a] space-y-1">
-                <li>Guarantee correctness</li>
-                <li>Eliminate liability</li>
-                <li>Replace accountability</li>
-              </ul>
-            </div>
-          </div>
-          <p class="text-sm text-[#7a7a7a] italic">ZTI provides evidence of decision process integrity — not a guarantee of outcome correctness.</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- PILOT -->
-  <section id="pilot" class="px-6 py-24" style="background:var(--surface2);">
-    <div class="max-w-6xl mx-auto">
-      <p class="tag mb-4">9. Implementation Plan</p>
-      <h2 class="text-3xl font-light mb-4">One workflow. Two to three weeks. One verified execution boundary.</h2>
-      <p class="text-[#9a9a9a] max-w-3xl mb-10 leading-relaxed">
-        Not a procurement. Not a platform adoption. A scoped exploration on one existing AI-driven workflow.
-        The goal: a working execution boundary in place at the end of the pilot, and a clear picture of what extending it requires.
+  <section class="ad-scenario ad-scenario-alt">
+    <div class="ad-shell">
+      <p class="ad-tag">Scenario 2</p>
+      <h2>Identity and Access Operations</h2>
+      <p class="ad-scenario-intro">
+        AI-generated access recommendations can improve response time, but access operations are a direct control
+        surface and require deterministic verification.
       </p>
-
-      <div class="grid md:grid-cols-3 gap-4 mb-10">
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-3">Option A — Infrastructure</p>
-          <p class="text-sm text-[#9a9a9a] leading-relaxed">AI-assisted Terraform or infrastructure change workflow. ZTI sits between the AI proposal and the CI/CD apply step.</p>
-        </div>
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-3">Option B — CI/CD Pipeline</p>
-          <p class="text-sm text-[#9a9a9a] leading-relaxed">AI-generated pipeline configuration or deployment proposals. ZTI gates between AI output and the pipeline execution trigger.</p>
-        </div>
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-3">Option C — Agent Runtime</p>
-          <p class="text-sm text-[#9a9a9a] leading-relaxed">An AI agent that proposes or executes API actions. ZTI wraps the tool-call or action-dispatch path.</p>
-        </div>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-4 mb-10">
-        <div class="card p-5">
-          <p class="mono text-xs uppercase accent mb-2">Week 1</p>
-          <p class="text-sm text-[#9a9a9a]">Map the workflow. Define policy constraints. Stand up ZTI in audit mode. Review what classification and validation surfaces look like against real proposals.</p>
-        </div>
-        <div class="card p-5">
-          <p class="mono text-xs uppercase accent mb-2">Week 2</p>
-          <p class="text-sm text-[#9a9a9a]">Review audit mode output. Refine policy definitions. Identify edge cases and define how the boundary handles them.</p>
-        </div>
-        <div class="card p-5">
-          <p class="mono text-xs uppercase accent mb-2">Week 3</p>
-          <p class="text-sm text-[#9a9a9a]">Switch to enforcement mode. Run the workflow through the verified execution path. Document what the boundary catches and what the sealed record looks like.</p>
-        </div>
-      </div>
-
-      <div class="card p-6 max-w-3xl mb-8">
-        <p class="mono text-xs uppercase accent mb-3">What You Have at the End</p>
-        <ul class="text-sm text-[#9a9a9a] space-y-2">
-          <li>One workflow with a working ZTI execution boundary in enforcement mode</li>
-          <li>A sealed decision record for every proposal that passed through the boundary</li>
-          <li>A policy definition that can be versioned and extended</li>
-          <li>A clear answer to: "what would it take to extend this to the next workflow?"</li>
-        </ul>
-      </div>
-
-      <div class="flex flex-wrap gap-4">
-        <a href="/" class="mono text-sm px-6 py-3 border border-[#f5a623] text-[#f5a623] hover:bg-[#f5a623] hover:text-black transition">Read the Protocol →</a>
-        <a href="/adopt#pilot" class="mono text-sm px-6 py-3 border border-[#2a2a2a] text-[#a0a0a0] hover:text-white hover:border-white transition">Full Pilot Proposal</a>
+      <div class="ad-pattern">
+        <article class="ad-block">
+          <h3>Context</h3>
+          <p>
+            Security and operations workflows use AI proposals for privilege changes, account actions, entitlement
+            reviews, and exception handling.
+          </p>
+        </article>
+        <article class="ad-block">
+          <h3>Risk</h3>
+          <p>
+            Over-broad grants, incorrect revocations, or policy bypasses can create immediate availability and
+            security incidents with audit exposure.
+          </p>
+        </article>
+        <article class="ad-block">
+          <h3>ZTI Enforcement</h3>
+          <p>
+            ZTI enforces role, scope, approval, and policy constraints before access actions execute. Rejected
+            proposals are retained as sealed decision records for review.
+          </p>
+        </article>
       </div>
     </div>
   </section>
 
-  <!-- PRECEDENT -->
-  <section id="precedent" class="px-6 py-24">
-    <div class="max-w-6xl mx-auto">
-      <p class="tag mb-4">10. The Precedent</p>
-      <h2 class="text-3xl font-light mb-6">This gap has been closed before.</h2>
-      <div class="grid md:grid-cols-3 gap-4 mb-8">
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-3">Implicit Network Trust</p>
-          <p class="text-sm text-[#9a9a9a] leading-relaxed">Perimeter trust did not compose with distributed systems. The boundary moved from the edge to identity. Zero Trust networking.</p>
-        </div>
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-3">Manual Financial Records</p>
-          <p class="text-sm text-[#9a9a9a] leading-relaxed">Human record-keeping did not scale with transaction volume. Tamper-evident verification replaced it. Cryptographic ledgers.</p>
-        </div>
-        <div class="card p-6">
-          <p class="mono text-xs uppercase accent mb-3">AI-Driven Execution</p>
-          <p class="text-sm text-[#9a9a9a] leading-relaxed">AI-generated proposals reaching execution without a verification contract. The boundary is missing. ZTI is the protocol for it.</p>
-        </div>
-      </div>
-      <div class="card p-6 max-w-3xl">
-        <p class="text-[#c8c8c8]">
-          Don't trust AI.<br>
-          Verify the decision.
-        </p>
-        <p class="text-[#5a5a5a] text-sm mt-3">Make proof the only acceptable gate to execution.</p>
+  <section class="ad-scenario">
+    <div class="ad-shell">
+      <p class="ad-tag">Scenario 3</p>
+      <h2>CI/CD and Release Control</h2>
+      <p class="ad-scenario-intro">
+        AI is increasingly upstream of release decisions through generated pipeline logic and deployment actions.
+        Release integrity requires an explicit decision gate.
+      </p>
+      <div class="ad-pattern">
+        <article class="ad-block">
+          <h3>Context</h3>
+          <p>
+            Engineering organizations use AI-assisted generation for pipeline steps, rollout parameters, remediation
+            actions, and production runbook execution.
+          </p>
+        </article>
+        <article class="ad-block">
+          <h3>Risk</h3>
+          <p>
+            Unverified release actions can bypass change policy, trigger unstable deployments, and complicate
+            root-cause analysis when incidents occur.
+          </p>
+        </article>
+        <article class="ad-block">
+          <h3>ZTI Enforcement</h3>
+          <p>
+            ZTI validates release proposals against deployment policy and environment constraints, then forwards only
+            verified artifacts to pipeline execution controls.
+          </p>
+        </article>
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section id="cta" class="px-6 py-28 text-center" style="background:var(--surface2);">
-    <p class="tag mb-6 block">Protocol Specification</p>
-    <h2 class="text-4xl font-light mb-4">Read the protocol. Build the boundary.</h2>
-    <p class="text-[#9a9a9a] max-w-xl mx-auto mb-10 leading-relaxed">
-      ZTI is an open protocol. The full specification — architecture, verification pipeline,
-      cryptographic chaining, and threat model — is public.
-      ZTI can be implemented today using existing policy engines,
-      schema validation, and cryptographic logging systems.
-    </p>
-    <div class="flex flex-wrap gap-4 justify-center mb-12">
-      <a href="/" class="mono border px-6 py-3 border-[#f5a623] text-[#f5a623] hover:bg-[#f5a623] hover:text-black transition">Protocol Specification →</a>
-      <a href="/" class="mono border px-6 py-3 border-[#2a2a2a] text-[#a0a0a0] hover:text-white hover:border-white transition">Protocol Site</a>
+  <section class="ad-scenario ad-scenario-alt">
+    <div class="ad-shell">
+      <p class="ad-tag">Scenario 4</p>
+      <h2>Financial and Operational Approval Workflows</h2>
+      <p class="ad-scenario-intro">
+        AI-generated operational actions can influence financial outcomes. Executive oversight requires transparent,
+        reproducible decision evidence.
+      </p>
+      <div class="ad-pattern">
+        <article class="ad-block">
+          <h3>Context</h3>
+          <p>
+            AI systems propose budget actions, vendor operations, service-scale decisions, and workflow exceptions in
+            enterprise operating environments.
+          </p>
+        </article>
+        <article class="ad-block">
+          <h3>Risk</h3>
+          <p>
+            Inaccurate or non-compliant actions can create direct cost, regulatory exposure, and uncertain executive
+            accountability when decision lineage cannot be reconstructed.
+          </p>
+        </article>
+        <article class="ad-block">
+          <h3>ZTI Enforcement</h3>
+          <p>
+            ZTI requires each action to satisfy declared approval and policy constraints, then seals decision lineage
+            so finance, operations, and audit teams can verify exactly what executed.
+          </p>
+        </article>
+      </div>
     </div>
-    <p class="text-[#4a4a4a] text-sm italic">AI systems without an execution boundary are incomplete.</p>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="px-6 py-10 border-t border-[#1f1f1f] text-[#5f5f5f] text-sm">
-    <div class="max-w-6xl mx-auto flex flex-wrap justify-between gap-4">
-      <div>
-        <p class="text-[#7f7f7f]">Zero Trust Intelligence (ZTI)</p>
-        <p>Author: Chad McCormack · © 2026 Chad McCormack</p>
-        <p>MIT License</p>
-      </div>
-      <div class="mono text-xs space-y-1 text-right">
-        <p><a href="https://github.com/bitscon/zerotrustintelligence" class="hover:text-white transition">GitHub →</a></p>
-        <p><a href="/" class="hover:text-white transition">Protocol site →</a></p>
-        <p><a href="/adopt" class="hover:text-white transition">Adopt →</a></p>
-      </div>
+  <section class="ad-close">
+    <div class="ad-shell">
+      <h2>Applied scope defined. Next: implementation system.</h2>
+      <p>
+        ZTI scenarios define where the execution boundary belongs. ZTI Core defines how that boundary is deployed,
+        integrated, and enforced in production.
+      </p>
+      <a href="/core" class="ad-next">Continue to ZTI Core →</a>
     </div>
+  </section>
+
+  <footer class="ad-footer">
+    <div class="ad-shell">Zero Trust Intelligence (ZTI) · © 2026 Chad McCormack</div>
   </footer>
-
-  <section class="zti-transition">
-    <h2>Ready to Operationalize?</h2>
-    <p>
-      ZTI can be implemented manually —
-      or enforced automatically.
-    </p>
-    <a href="/core">Explore the Control Layer →</a>
-  </section>
 
   <script>
   (function () {
