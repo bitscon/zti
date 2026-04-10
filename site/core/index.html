@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ZTI Core</title>
+  <title>ZTI Core | Controlled Access</title>
   <script src="/tailwindcss.js"></script>
   <style>
     :root {
@@ -14,25 +14,167 @@
       --muted: #9a9a9a;
       --accent: #f5a623;
     }
-    body { margin: 0; background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-    .mono { font-family: 'IBM Plex Mono', 'SFMono-Regular', Menlo, Consolas, monospace; }
-    .zti-global-nav { position: sticky; top: 0; z-index: 60; border-bottom: 1px solid var(--border); background: var(--bg); width: 100%; padding: 1rem 1.5rem; display: flex; gap: 1.5rem; flex-wrap: wrap; }
-    .zti-global-nav a { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; text-decoration: none; color: var(--muted); opacity: 0.7; transition: opacity 0.2s ease, color 0.2s ease; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .zti-global-nav {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      width: 100%;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+    .zti-global-nav a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.875rem;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      color: var(--muted);
+      opacity: 0.7;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
     .zti-global-nav a:hover { opacity: 1; color: var(--text); }
     .zti-global-nav a.active { opacity: 1; color: var(--accent); font-weight: 600; }
-    .core-hero, .core-boundary, .core-capabilities { max-width: 52rem; margin: 0 auto; padding: 2rem 1.5rem; }
-    .core-hero { padding-top: 4.5rem; }
-    .core-hero h1 { margin: 0 0 0.75rem; font-size: clamp(2rem, 4.5vw, 3.25rem); font-weight: 400; letter-spacing: 0.01em; }
-    .core-hero p { margin: 0; color: var(--muted); font-size: 1.125rem; }
-    .core-boundary { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface); }
-    .core-boundary p { margin: 0; color: #c8c8c8; line-height: 1.75; }
-    .core-capabilities h2 { margin: 0 0 0.75rem; font-size: 1.25rem; font-weight: 500; }
-    .core-capabilities ul { margin: 0; padding-left: 1.25rem; color: var(--muted); line-height: 1.7; }
-    .core-capabilities li { margin: 0.35rem 0; }
+
+    /* Layout */
+    .cr-container { max-width: 60rem; margin: 0 auto; padding: 5rem 1.5rem; }
+    .cr-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: #555; margin: 0 0 1.25rem; }
+    .cr-eyebrow-dark { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: #888; margin: 0 0 1.25rem; }
+
+    /* Hero */
+    .cr-hero { background: #090909; color: #e7e7e7; text-align: center; border-top: 1px solid #1f1f1f; }
+    .cr-h1 { margin: 0; font-size: clamp(2rem, 4.5vw, 3.5rem); font-weight: 300; line-height: 1.15; letter-spacing: -0.01em; }
+    .cr-h1-accent { margin: 0.5rem 0 1.25rem; font-size: clamp(1.25rem, 2.5vw, 1.875rem); font-weight: 300; color: #f5a623; }
+    .cr-sub { margin: 0 0 2.5rem; color: #9a9a9a; font-size: 1.05rem; line-height: 1.7; }
+    .cr-sub-tension { margin: 0.75rem 0 2.5rem; color: #666; font-size: 0.9rem; }
+    .cr-cta-group { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .cr-btn-primary {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      padding: 0.75rem 1.5rem;
+      border: 1px solid #f5a623;
+      color: #f5a623;
+      text-decoration: none;
+      background: transparent;
+      display: inline-block;
+      transition: background 0.15s, color 0.15s;
+    }
+    .cr-btn-primary:hover { background: #f5a623; color: #000; }
+    .cr-btn-secondary {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      padding: 0.75rem 1.5rem;
+      border: 1px solid #2a2a2a;
+      color: #9a9a9a;
+      text-decoration: none;
+      background: transparent;
+      display: inline-block;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .cr-btn-secondary:hover { border-color: #e7e7e7; color: #e7e7e7; }
+    .cr-btn-large { font-size: 0.95rem; padding: 1rem 2rem; }
+
+    /* Problem */
+    .cr-problem { background: #f4f4f4; color: #111; text-align: center; border-top: 1px solid #e0e0e0; }
+    .cr-h2-dark { margin: 0 0 0.75rem; font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 400; color: #111; }
+    .cr-body-dark { margin: 0 0 2.5rem; color: #555; font-size: 1.05rem; line-height: 1.7; }
+    .cr-risk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1px; background: #ddd; margin-bottom: 2rem; border: 1px solid #ddd; }
+    .cr-risk-card { background: #f4f4f4; padding: 1.5rem; text-align: left; }
+    .cr-risk-id { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; color: #f5a623; margin: 0 0 0.4rem; }
+    .cr-risk-label { font-size: 0.95rem; font-weight: 500; color: #111; margin: 0 0 0.5rem; }
+    .cr-risk-body { font-size: 0.875rem; color: #666; margin: 0; line-height: 1.6; }
+    .cr-closer-dark { font-size: 0.95rem; color: #666; margin: 0; }
+
+    /* Solution */
+    .cr-solution { background: #111111; color: #e7e7e7; text-align: center; border-top: 1px solid #1f1f1f; }
+    .cr-h2 { margin: 0 0 0.75rem; font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 400; }
+    .cr-body { margin: 0 0 2rem; color: #9a9a9a; font-size: 1.05rem; line-height: 1.7; }
+    .cr-pipeline {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.875rem;
+      color: #c8c8c8;
+      border: 1px solid #1f1f1f;
+      background: #0c0c0c;
+      padding: 1.25rem 2rem;
+      display: inline-block;
+      margin-bottom: 3rem;
+      letter-spacing: 0.02em;
+    }
+    .cr-prop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1px; background: #1f1f1f; margin-bottom: 2rem; border: 1px solid #1f1f1f; }
+    .cr-prop { background: #111111; padding: 1.5rem; text-align: left; }
+    .cr-prop-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #f5a623; margin: 0 0 0.5rem; }
+    .cr-prop-body { font-size: 0.875rem; color: #9a9a9a; margin: 0; line-height: 1.6; }
+    .cr-note { font-size: 0.875rem; color: #777; margin: 0; }
+
+    /* How It Works */
+    .cr-how { background: #f4f4f4; color: #111; text-align: center; border-top: 1px solid #e0e0e0; }
+    .cr-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1px; background: #ddd; margin-top: 2.5rem; border: 1px solid #ddd; }
+    .cr-step { background: #f4f4f4; padding: 2rem 1.5rem; text-align: left; }
+    .cr-step-num { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: #f5a623; margin: 0 0 0.75rem; }
+    .cr-step-title { font-size: 1rem; font-weight: 500; color: #111; margin: 0 0 0.5rem; }
+    .cr-step-body { font-size: 0.875rem; color: #666; margin: 0; line-height: 1.65; }
+
+    /* Without / With */
+    .cr-contrast { background: #090909; color: #e7e7e7; border-top: 1px solid #1f1f1f; }
+    .cr-contrast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #1f1f1f; border: 1px solid #1f1f1f; }
+    .cr-without { background: #0f0909; padding: 2.5rem; border-top: 2px solid #7f1d1d; }
+    .cr-with { background: #091109; padding: 2.5rem; border-top: 2px solid #14532d; }
+    .cr-contrast-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #fca5a5; margin: 0 0 1rem; }
+    .cr-contrast-label-pass { color: #86efac; }
+    .cr-contrast-list { list-style: none; padding: 0; margin: 0; }
+    .cr-contrast-list li { font-size: 0.9rem; color: #b5b5b5; padding: 0.4rem 0; border-bottom: 1px solid #1a1a1a; line-height: 1.5; }
+    .cr-contrast-list li:last-child { border-bottom: none; }
+
+    /* Pricing */
+    .cr-pricing { background: #f4f4f4; color: #111; text-align: center; border-top: 1px solid #e0e0e0; }
+    .cr-pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1px; background: #ddd; margin: 2.5rem 0 1.5rem; border: 1px solid #ddd; }
+    .cr-pricing-card { background: #ffffff; padding: 2rem 1.5rem; text-align: left; position: relative; }
+    .cr-pricing-featured { border-top: 2px solid #f5a623; }
+    .cr-tier-badge { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: #f5a623; margin: 0 0 0.75rem; }
+    .cr-tier-label { font-size: 1.125rem; font-weight: 500; color: #111; margin: 0 0 0.25rem; }
+    .cr-tier-price { font-size: 2rem; font-weight: 300; color: #111; margin: 0 0 0.4rem; letter-spacing: -0.02em; }
+    .cr-tier-desc { font-size: 0.85rem; color: #888; margin: 0 0 1.5rem; }
+    .cr-tier-list { list-style: none; padding: 0; margin: 0 0 1.75rem; }
+    .cr-tier-list li { font-size: 0.875rem; color: #555; padding: 0.35rem 0; border-bottom: 1px solid #f0f0f0; }
+    .cr-tier-list li:last-child { border-bottom: none; }
+    .cr-tier-btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      padding: 0.65rem 1.25rem;
+      display: inline-block;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .cr-tier-btn-primary { border: 1px solid #f5a623; color: #f5a623; background: transparent; }
+    .cr-tier-btn-primary:hover { background: #f5a623; color: #000; }
+    .cr-tier-btn-outline { border: 1px solid #ccc; color: #555; background: transparent; }
+    .cr-tier-btn-outline:hover { border-color: #111; color: #111; }
+    .cr-pricing-note { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: #666; margin: 0; }
+
+    /* Final CTA */
+    .cr-final-cta { background: #090909; color: #e7e7e7; text-align: center; border-top: 1px solid #1f1f1f; }
+    .cr-final-cta .cr-h2 { margin-bottom: 0.25rem; }
+    .cr-final-note { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: #666; margin: 1.25rem 0 0; }
+
+    /* Mobile */
     @media (max-width: 640px) {
       .zti-global-nav { padding: 0.75rem 1rem; gap: 1rem; }
-      .core-hero, .core-boundary, .core-capabilities { padding-left: 1rem; padding-right: 1rem; }
-      .core-hero { padding-top: 3rem; }
+      .cr-container { padding: 3rem 1rem; }
+      .cr-contrast-grid { grid-template-columns: 1fr; }
+      .cr-pipeline { font-size: 0.75rem; padding: 1rem; }
     }
   </style>
 </head>
@@ -44,27 +186,189 @@
     <a href="/core" data-nav="core">Core</a>
   </nav>
 
-  <section class="core-hero">
-    <h1>ZTI Core</h1>
-    <p>The execution layer for verifiable AI systems.</p>
+  <section class="cr-hero">
+    <div class="cr-container">
+      <p class="cr-eyebrow">ZTI Core</p>
+      <h1 class="cr-h1">AI is already executing<br>in your stack.</h1>
+      <p class="cr-h1-accent">ZTI makes sure it is verified before execution.</p>
+      <p class="cr-sub">
+        A deterministic decision verification layer between AI and production.<br>
+        Auditable. Enforceable. No trust required.
+      </p>
+      <p class="cr-sub-tension">Without it, AI decisions execute unchecked.</p>
+      <div class="cr-cta-group">
+        <a href="/adopt/request-access" class="cr-btn-primary">Request Access →</a>
+        <a href="/adopt/request-access" class="cr-btn-secondary">See It in Action</a>
+      </div>
+    </div>
   </section>
 
-  <section class="core-boundary">
-    <p>
-      ZTI defines the model.
-      Adoption shows how to apply it.
-      Core enforces it.
-    </p>
+  <section class="cr-problem">
+    <div class="cr-container">
+      <p class="cr-eyebrow-dark">The gap</p>
+      <h2 class="cr-h2-dark">AI decisions are reaching production unverified.</h2>
+      <p class="cr-body-dark">
+        Infrastructure changes. Automated workflows. Data operations.
+        Most of it executes without a contract, a check, or a record.
+      </p>
+      <div class="cr-risk-grid">
+        <div class="cr-risk-card">
+          <p class="cr-risk-id">RISK-001</p>
+          <p class="cr-risk-label">Misconfigured infrastructure</p>
+          <p class="cr-risk-body">AI-generated Terraform assigns public IPs to production services. No one reviewed it. It deployed.</p>
+        </div>
+        <div class="cr-risk-card">
+          <p class="cr-risk-id">RISK-002</p>
+          <p class="cr-risk-label">Silent policy violations</p>
+          <p class="cr-risk-body">AI-driven automation bypasses approval gates. Policies are defined. They are not enforced at execution.</p>
+        </div>
+        <div class="cr-risk-card">
+          <p class="cr-risk-id">RISK-003</p>
+          <p class="cr-risk-label">No audit trail</p>
+          <p class="cr-risk-body">When an AI-driven action causes an incident, there is no decision record. No lineage. No proof of what ran.</p>
+        </div>
+      </div>
+      <p class="cr-closer-dark">Every one of these has already happened. Probably in your stack.</p>
+    </div>
   </section>
 
-  <section class="core-capabilities">
-    <h2>What It Does</h2>
-    <ul>
-      <li>Deterministic validation enforcement</li>
-      <li>Rejection of unverifiable outputs</li>
-      <li>Decision lineage tracking</li>
-      <li>Audit-ready proof generation</li>
-    </ul>
+  <section class="cr-solution">
+    <div class="cr-container">
+      <p class="cr-eyebrow">The fix</p>
+      <h2 class="cr-h2">Introduce a verification boundary.</h2>
+      <p class="cr-body">
+        ZTI sits between AI and execution. It evaluates every proposed action against a declared policy contract
+        deterministically before anything reaches a system.
+      </p>
+      <div class="cr-pipeline">
+        AI generates &nbsp;→&nbsp; ZTI verifies &nbsp;→&nbsp; Execution proceeds
+      </div>
+      <div class="cr-prop-grid">
+        <div class="cr-prop">
+          <p class="cr-prop-label">Deterministic</p>
+          <p class="cr-prop-body">Same input. Same output. Same decision. Every time.</p>
+        </div>
+        <div class="cr-prop">
+          <p class="cr-prop-label">Enforceable</p>
+          <p class="cr-prop-body">Unverifiable proposals do not execute. The boundary is real.</p>
+        </div>
+        <div class="cr-prop">
+          <p class="cr-prop-label">Auditable</p>
+          <p class="cr-prop-body">Every decision is sealed with a reproducible artifact and integrity hash.</p>
+        </div>
+      </div>
+      <p class="cr-note">ZTI does not slow down AI. It defines when AI is allowed to act.</p>
+    </div>
+  </section>
+
+  <section class="cr-how">
+    <div class="cr-container">
+      <p class="cr-eyebrow-dark">Mechanics</p>
+      <h2 class="cr-h2-dark">Three steps. No trust required.</h2>
+      <div class="cr-steps">
+        <div class="cr-step">
+          <p class="cr-step-num">01</p>
+          <h3 class="cr-step-title">AI proposes an action</h3>
+          <p class="cr-step-body">Terraform plans, workflow changes, data operations. Any AI-generated proposal that would cross a system boundary.</p>
+        </div>
+        <div class="cr-step">
+          <p class="cr-step-num">02</p>
+          <h3 class="cr-step-title">ZTI evaluates it</h3>
+          <p class="cr-step-body">Policy registry lookup, constraint validation, explainability artifact generation, and integrity sealing. No inference. No probability.</p>
+        </div>
+        <div class="cr-step">
+          <p class="cr-step-num">03</p>
+          <h3 class="cr-step-title">Only verified actions execute</h3>
+          <p class="cr-step-body">Proposals that pass receive a verified decision record. Everything else is logged or blocked.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cr-contrast">
+    <div class="cr-container">
+      <div class="cr-contrast-grid">
+        <div class="cr-without">
+          <p class="cr-contrast-label">Without ZTI</p>
+          <ul class="cr-contrast-list">
+            <li>AI decisions reach production directly</li>
+            <li>No execution contract enforced</li>
+            <li>No decision lineage or audit trail</li>
+            <li>Incidents require manual reconstruction</li>
+            <li>Policy is defined but not enforced</li>
+          </ul>
+        </div>
+        <div class="cr-with">
+          <p class="cr-contrast-label cr-contrast-label-pass">With ZTI</p>
+          <ul class="cr-contrast-list">
+            <li>Every proposal evaluated before execution</li>
+            <li>Policy contract enforced at the boundary</li>
+            <li>Every decision sealed with integrity hash</li>
+            <li>Incidents have a complete decision record</li>
+            <li>Execution is gated and verifiable</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cr-pricing">
+    <div class="cr-container">
+      <p class="cr-eyebrow-dark">Access</p>
+      <h2 class="cr-h2-dark">Controlled access. Three paths in.</h2>
+      <p class="cr-body-dark">ZTI Core is provisioned in phases. Start where you are.</p>
+      <div class="cr-pricing-grid">
+        <div class="cr-pricing-card">
+          <p class="cr-tier-label">Pilot</p>
+          <p class="cr-tier-price">Free</p>
+          <p class="cr-tier-desc">For evaluation and initial integration</p>
+          <ul class="cr-tier-list">
+            <li>Core verification pipeline</li>
+            <li>Audit mode boundary visibility</li>
+            <li>Decision artifact output</li>
+            <li>Initial scoped workflow support</li>
+          </ul>
+          <a href="/adopt/request-access" class="cr-tier-btn cr-tier-btn-outline">Request Pilot Access</a>
+        </div>
+
+        <div class="cr-pricing-card cr-pricing-featured">
+          <p class="cr-tier-badge">Most requested</p>
+          <p class="cr-tier-label">Pro</p>
+          <p class="cr-tier-price">Contact for pricing</p>
+          <p class="cr-tier-desc">For teams running AI in production</p>
+          <ul class="cr-tier-list">
+            <li>Full policy engine</li>
+            <li>Enforcement mode execution gating</li>
+            <li>Pipeline and infrastructure verification</li>
+            <li>Audit logs with lineage</li>
+          </ul>
+          <a href="/adopt/request-access" class="cr-tier-btn cr-tier-btn-primary">Talk to Us →</a>
+        </div>
+
+        <div class="cr-pricing-card">
+          <p class="cr-tier-label">Enterprise</p>
+          <p class="cr-tier-price">Custom</p>
+          <p class="cr-tier-desc">For regulated environments</p>
+          <ul class="cr-tier-list">
+            <li>Custom policy frameworks</li>
+            <li>Private deployment options</li>
+            <li>SIEM and compliance integration</li>
+            <li>Dedicated support model</li>
+          </ul>
+          <a href="/adopt/request-access" class="cr-tier-btn cr-tier-btn-outline">Talk to Us →</a>
+        </div>
+      </div>
+      <p class="cr-pricing-note">ZTI Core is in controlled access. Not all requests are approved.</p>
+    </div>
+  </section>
+
+  <section class="cr-final-cta">
+    <div class="cr-container">
+      <h2 class="cr-h2">You don't need to trust AI.</h2>
+      <p class="cr-h1-accent">You need to verify it.</p>
+      <a href="/adopt/request-access" class="cr-btn-primary cr-btn-large">Request Access →</a>
+      <p class="cr-final-note">Reviewed manually. Not all requests are approved.</p>
+    </div>
   </section>
 
   <script>
