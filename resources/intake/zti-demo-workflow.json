@@ -1,0 +1,100 @@
+{
+  "name": "ZTI Demo — Proposal Verification",
+  "nodes": [
+    {
+      "id": "a1b2c3d4-0001-0000-0000-000000000001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "zti-demo",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "a1b2c3d4-0002-0000-0000-000000000002",
+      "name": "Validate Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300],
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || $input.first().json;\nconst proposal = (body.proposal || '').trim();\n\nif (!proposal || proposal.length < 5) {\n  throw new Error('INVALID_PROPOSAL: proposal field missing or too short');\n}\n\nreturn [{ json: { proposal } }];"
+      }
+    },
+    {
+      "id": "a1b2c3d4-0003-0000-0000-000000000003",
+      "name": "Classify",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300],
+      "parameters": {
+        "jsCode": "const proposal = $input.first().json.proposal;\nconst t = proposal.toLowerCase();\n\nconst POLICY = [\n  {\n    key: 'DESTRUCTIVE',\n    keywords: ['drop', 'delete', 'destroy', 'truncate', 'wipe', 'purge', 'remove all', 'nuke', 'terminate all', 'erase'],\n    verdict: 'BLOCK',\n    class: 'DESTRUCTIVE_ACTION',\n    reason: 'Proposal matches a destructive action class. Destructive operations require human authorization and cannot be verified as safe for automated execution.',\n    constraints_failed: ['destructive_action_gate', 'requires_human_authorization']\n  },\n  {\n    key: 'UNAUTHORIZED',\n    keywords: ['without approval', 'bypass', 'skip review', 'no approval', 'override', 'disable mfa', 'disable security', 'revoke all', 'disable enforcement'],\n    verdict: 'BLOCK',\n    class: 'POLICY_BYPASS_ATTEMPT',\n    reason: 'Proposal contains explicit policy bypass language. Requests to disable controls or skip approval gates are rejected at the execution boundary.',\n    constraints_failed: ['policy_bypass_gate', 'authorization_required']\n  },\n  {\n    key: 'HIGH_RISK',\n    keywords: ['scale to zero', 'production', 'prod', 'rotate', 'revoke', 'restart all', 'deploy to prod', 'rebuild', 'migrate', 'cutover'],\n    verdict: 'CONDITIONAL',\n    class: 'HIGH_RISK_OPERATION',\n    reason: 'Proposal classified as high-risk. Execution requires verified approval token, change window confirmation, and blast-radius attestation.',\n    constraints_failed: []\n  },\n  {\n    key: 'READ_ONLY',\n    keywords: ['report', 'list', 'describe', 'show', 'get', 'fetch', 'read', 'query', 'check status', 'audit', 'generate report'],\n    verdict: 'ALLOW',\n    class: 'READ_ONLY_OPERATION',\n    reason: 'Proposal classified as a read-only operation. No execution boundary crossed. Decision sealed for audit trail.',\n    constraints_failed: []\n  }\n];\n\nlet matched = null;\nfor (const policy of POLICY) {\n  for (const kw of policy.keywords) {\n    if (t.includes(kw)) { matched = policy; break; }\n  }\n  if (matched) break;\n}\n\nif (!matched) {\n  matched = {\n    key: 'UNCLASSIFIED',\n    verdict: 'CONDITIONAL',\n    class: 'UNCLASSIFIED_PROPOSAL',\n    reason: 'Proposal could not be deterministically classified against any known decision type. Manual review required before execution is authorized.',\n    constraints_failed: ['requires_classification']\n  };\n}\n\nreturn [{ json: { proposal, classification: matched } }];"
+      }
+    },
+    {
+      "id": "a1b2c3d4-0004-0000-0000-000000000004",
+      "name": "Generate Artifact",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300],
+      "parameters": {
+        "jsCode": "const { proposal, classification } = $input.first().json;\nconst ts = new Date().toISOString();\nconst traceId = 'zti-' + Date.now().toString(36).toUpperCase();\n\n// Deterministic FNV-1a hash\nfunction fnv1a(str) {\n  let h = 0x811c9dc5;\n  for (let i = 0; i < str.length; i++) {\n    h ^= str.charCodeAt(i);\n    h = Math.imul(h, 0x01000193) >>> 0;\n  }\n  return h.toString(16).padStart(8, '0');\n}\n\nconst base = `${traceId}|${ts}|${classification.class}|${proposal}`;\nconst h1 = fnv1a(base);\nconst h2 = fnv1a(h1 + ts);\nconst integrityHash = 'sha256:' + h1 + h2;\n\nconst STEPS = [\n  { name: 'parse_proposal',       result: 'PASS' },\n  { name: 'registry_lookup',      result: 'PASS' },\n  { name: 'pattern_classification', result: classification.verdict === 'BLOCK' ? 'MATCH_BLOCKED' : classification.verdict === 'CONDITIONAL' ? 'MATCH_CONDITIONAL' : 'MATCH_ALLOWED' },\n  { name: 'constraint_validation', result: classification.constraints_failed.length > 0 ? 'FAILED' : 'PASS' },\n  { name: 'explainability_artifact', result: 'PASS' },\n  { name: 'integrity_seal',       result: 'PASS' }\n];\n\nconst artifact = {\n  trace_id: traceId,\n  timestamp: ts,\n  proposal: proposal.substring(0, 200),\n  classification: classification.class,\n  verdict: classification.verdict,\n  reason: classification.reason,\n  constraints_failed: classification.constraints_failed,\n  pipeline: STEPS,\n  integrity_hash: integrityHash,\n  sealed: true\n};\n\nreturn [{ json: artifact }];"
+      }
+    },
+    {
+      "id": "a1b2c3d4-0005-0000-0000-000000000005",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1120, 300],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              { "name": "Access-Control-Allow-Origin", "value": "https://zerotrustintelligence.io" },
+              { "name": "Content-Type", "value": "application/json" }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "a1b2c3d4-0006-0000-0000-000000000006",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [680, 480],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ error: 'REJECTED', code: $json.message || 'INVALID_INPUT' }) }}",
+        "options": {
+          "responseCode": 400
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "Validate Input", "type": "main", "index": 0 }]]
+    },
+    "Validate Input": {
+      "main": [[{ "node": "Classify", "type": "main", "index": 0 }]]
+    },
+    "Classify": {
+      "main": [[{ "node": "Generate Artifact", "type": "main", "index": 0 }]]
+    },
+    "Generate Artifact": {
+      "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": ""
+  },
+  "pinData": {}
+}

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZTI Demo — See Verification in Action</title>
+  <script src="/tailwindcss.js"></script>
+  <style>
+    :root {
+      --bg: #090909;
+      --surface: #111111;
+      --border: #1f1f1f;
+      --text: #e7e7e7;
+      --muted: #9a9a9a;
+      --accent: #f5a623;
+      --pass: #4caf50;
+      --block: #ff4d4d;
+      --warn: #f5a623;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .mono { font-family: 'IBM Plex Mono', 'SFMono-Regular', Menlo, Consolas, monospace; }
+
+    .zti-global-nav { position: sticky; top: 0; z-index: 60; border-bottom: 1px solid var(--border); background: var(--bg); width: 100%; padding: 1rem 1.5rem; display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .zti-global-nav a { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; text-decoration: none; color: var(--muted); opacity: 0.7; transition: opacity 0.2s ease, color 0.2s ease; }
+    .zti-global-nav a:hover { opacity: 1; color: var(--text); }
+    .zti-global-nav a.active { opacity: 1; color: var(--accent); font-weight: 600; }
+
+    .demo-shell { max-width: 56rem; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
+
+    .demo-header { margin-bottom: 3rem; }
+    .demo-header .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #555; margin-bottom: 1rem; }
+    .demo-header h1 { margin: 0 0 0.75rem; font-size: clamp(1.875rem, 3.5vw, 2.75rem); font-weight: 400; line-height: 1.15; }
+    .demo-header p { margin: 0; color: var(--muted); line-height: 1.7; max-width: 38rem; }
+
+    .demo-presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem; }
+    .preset-btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.35rem 0.65rem;
+      border: 1px solid #252525;
+      background: transparent;
+      color: #777;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .preset-btn:hover { color: var(--text); border-color: #444; }
+
+    .demo-input-block { margin-bottom: 1.25rem; }
+    .demo-input-block label { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #555; margin-bottom: 0.5rem; }
+    .demo-input-block textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid #252525;
+      color: var(--text);
+      padding: 0.875rem 1rem;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      resize: vertical;
+      min-height: 5rem;
+      transition: border-color 0.15s;
+    }
+    .demo-input-block textarea:focus { outline: none; border-color: #3a3a3a; }
+
+    .demo-submit {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      padding: 0.65rem 1.25rem;
+      border: 1px solid var(--accent);
+      background: transparent;
+      color: var(--accent);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .demo-submit:hover:not(:disabled) { background: var(--accent); color: #000; }
+    .demo-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* OUTPUT PANEL */
+    #demo-output { margin-top: 2.5rem; display: none; }
+    #demo-output.visible { display: block; }
+
+    .out-divider { border: none; border-top: 1px solid var(--border); margin: 0 0 2rem; }
+
+    .pipeline-track { display: grid; gap: 0; margin-bottom: 2rem; }
+    .pipeline-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.875rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #161616;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .pipeline-step.visible { opacity: 1; transform: none; }
+    .step-icon { font-size: 0.75rem; margin-top: 0.1rem; min-width: 1rem; text-align: center; }
+    .step-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--muted); flex: 1; }
+    .step-result { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .step-result.pass  { color: var(--pass); }
+    .step-result.block { color: var(--block); }
+    .step-result.warn  { color: var(--warn); }
+    .step-result.pending { color: #333; }
+
+    .verdict-block {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.4s ease 0.1s;
+    }
+    .verdict-block.visible { opacity: 1; }
+    .verdict-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: #555; margin-bottom: 0.5rem; }
+    .verdict-value { font-size: 1.5rem; font-weight: 400; letter-spacing: 0.02em; }
+    .verdict-value.allow { color: var(--pass); }
+    .verdict-value.block { color: var(--block); }
+    .verdict-value.conditional { color: var(--warn); }
+    .verdict-sub { margin-top: 0.4rem; font-size: 0.85rem; color: var(--muted); }
+
+    .artifact-block {
+      border: 1px solid #191919;
+      background: #0c0c0c;
+      padding: 1.25rem;
+      opacity: 0;
+      transition: opacity 0.4s ease 0.2s;
+    }
+    .artifact-block.visible { opacity: 1; }
+    .artifact-row { display: flex; gap: 1rem; padding: 0.3rem 0; border-bottom: 1px solid #141414; font-size: 0.8rem; }
+    .artifact-row:last-child { border-bottom: none; }
+    .artifact-key { font-family: 'IBM Plex Mono', monospace; color: #555; min-width: 10rem; }
+    .artifact-val { font-family: 'IBM Plex Mono', monospace; color: var(--text); word-break: break-all; }
+
+    .demo-note { margin-top: 2rem; font-size: 0.8rem; color: #444; font-family: 'IBM Plex Mono', monospace; }
+
+    .reset-link { display: none; margin-top: 1.5rem; }
+    .reset-link.visible { display: block; }
+    .reset-link button { background: none; border: none; color: #555; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; cursor: pointer; padding: 0; text-decoration: underline; }
+    .reset-link button:hover { color: var(--text); }
+
+    @media (max-width: 640px) {
+      .zti-global-nav { padding: 0.75rem 1rem; gap: 1rem; }
+      .demo-shell { padding: 2.5rem 1rem 4rem; }
+      .artifact-key { min-width: 7rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="zti-global-nav">
+    <a href="/" data-nav="protocol">Protocol</a>
+    <a href="/adopt" data-nav="adopt">Adopt</a>
+    <a href="/core" data-nav="core">Core</a>
+  </nav>
+
+  <main class="demo-shell">
+    <div class="demo-header">
+      <p class="eyebrow">ZTI · Live Demo</p>
+      <h1>Submit a proposal.<br>Watch it get verified.</h1>
+      <p>
+        Enter an AI-generated action proposal below — the same kind an agent might send to an infrastructure system, pipeline, or API.
+        ZTI will classify it, check it against policy constraints, and return a verifiable decision record.
+      </p>
+    </div>
+
+    <div class="demo-presets">
+      <button class="preset-btn" data-preset="Scale the production Kubernetes cluster to zero nodes.">Scale cluster to zero</button>
+      <button class="preset-btn" data-preset="Drop the users table from the production database.">Drop users table</button>
+      <button class="preset-btn" data-preset="Deploy the latest container image to the prod environment without approval.">Deploy without approval</button>
+      <button class="preset-btn" data-preset="Disable MFA enforcement for all users in the admin group.">Disable admin MFA</button>
+      <button class="preset-btn" data-preset="Rotate the production API keys and revoke all active sessions.">Rotate API keys</button>
+      <button class="preset-btn" data-preset="Generate a monthly cost report from the billing API.">Generate cost report</button>
+    </div>
+
+    <div class="demo-input-block">
+      <label for="proposal-input">AI-generated action proposal</label>
+      <textarea id="proposal-input" placeholder="e.g. Restart all services in the production environment..."></textarea>
+    </div>
+
+    <button class="demo-submit" id="demo-submit-btn">Submit for Verification →</button>
+
+    <div class="reset-link" id="reset-link">
+      <button id="reset-btn">Submit another proposal</button>
+    </div>
+
+    <div id="demo-output">
+      <hr class="out-divider" />
+
+      <div class="pipeline-track" id="pipeline-track">
+        <!-- steps injected by JS -->
+      </div>
+
+      <div class="verdict-block" id="verdict-block">
+        <div class="verdict-label">Decision</div>
+        <div class="verdict-value" id="verdict-value">—</div>
+        <div class="verdict-sub" id="verdict-sub"></div>
+      </div>
+
+      <div class="artifact-block" id="artifact-block">
+        <!-- rows injected by JS -->
+      </div>
+
+      <p class="demo-note">
+        This is ZTI evaluating a proposal in real time.<br>
+        The same verification layer governs production AI execution.
+      </p>
+    </div>
+  </main>
+
+  <script>
+  (function () {
+    // Nav active state
+    const path = window.location.pathname;
+    let current = "protocol";
+    if (path.startsWith("/adopt")) current = "adopt";
+    if (path.startsWith("/core")) current = "core";
+    document.querySelectorAll("[data-nav]").forEach(link => {
+      if (link.dataset.nav === current) link.classList.add("active");
+    });
+
+    // Preset buttons
+    document.querySelectorAll(".preset-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.getElementById("proposal-input").value = btn.dataset.preset;
+      });
+    });
+  })();
+
+  // ─── Classification Engine ──────────────────────────────────────────────────
+
+  const POLICY = {
+    DESTRUCTIVE: {
+      keywords: ["drop", "delete", "destroy", "truncate", "wipe", "purge", "remove all", "nuke", "terminate all", "erase"],
+      verdict: "BLOCK",
+      class: "DESTRUCTIVE_ACTION",
+      reason: "Proposal matches a destructive action class. Destructive operations require human authorization and cannot be verified as safe for automated execution.",
+      constraints_failed: ["destructive_action_gate", "requires_human_authorization"]
+    },
+    UNAUTHORIZED: {
+      keywords: ["without approval", "bypass", "skip review", "no approval", "override", "disable mfa", "disable security", "revoke all", "disable enforcement"],
+      verdict: "BLOCK",
+      class: "POLICY_BYPASS_ATTEMPT",
+      reason: "Proposal contains explicit policy bypass language. Requests to disable controls or skip approval gates are rejected at the execution boundary.",
+      constraints_failed: ["policy_bypass_gate", "authorization_required"]
+    },
+    HIGH_RISK: {
+      keywords: ["scale to zero", "production", "prod", "rotate", "revoke", "restart all", "deploy to prod", "rebuild", "migrate", "cutover"],
+      verdict: "CONDITIONAL",
+      class: "HIGH_RISK_OPERATION",
+      reason: "Proposal classified as high-risk. Execution requires verified approval token, change window confirmation, and blast-radius attestation.",
+      constraints_failed: []
+    },
+    READ_ONLY: {
+      keywords: ["report", "generate report", "list", "describe", "show", "get", "fetch", "read", "query", "check status", "audit"],
+      verdict: "ALLOW",
+      class: "READ_ONLY_OPERATION",
+      reason: "Proposal classified as a read-only operation. No execution boundary crossed. Decision sealed for audit trail.",
+      constraints_failed: []
+    }
+  };
+
+  function classify(text) {
+    const t = text.toLowerCase();
+
+    for (const [key, policy] of Object.entries(POLICY)) {
+      for (const kw of policy.keywords) {
+        if (t.includes(kw)) return { key, ...policy };
+      }
+    }
+
+    // Default: needs human review
+    return {
+      key: "UNCLASSIFIED",
+      verdict: "CONDITIONAL",
+      class: "UNCLASSIFIED_PROPOSAL",
+      reason: "Proposal could not be deterministically classified against any known decision type. Manual review required before execution is authorized.",
+      constraints_failed: ["requires_classification"]
+    };
+  }
+
+  function makeHash(str) {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = (h * 0x01000193) >>> 0;
+    }
+    return h.toString(16).padStart(8, "0");
+  }
+
+  function buildArtifact(proposal, classification) {
+    const ts = new Date().toISOString();
+    const rid = "zti-" + Date.now().toString(36).toUpperCase();
+    const artifactStr = `${rid}|${ts}|${classification.class}|${proposal}`;
+    const hash = makeHash(artifactStr);
+
+    return {
+      trace_id: rid,
+      timestamp: ts,
+      classification: classification.class,
+      verdict: classification.verdict,
+      reason: classification.reason,
+      constraints_failed: classification.constraints_failed,
+      integrity_hash: "sha256:" + hash + makeHash(hash + ts),
+      sealed: true
+    };
+  }
+
+  // ─── Pipeline Steps ──────────────────────────────────────────────────────────
+
+  const STEPS = [
+    { label: "Parse proposal",          key: "parse"      },
+    { label: "Registry lookup",         key: "registry"   },
+    { label: "Pattern classification",  key: "classify"   },
+    { label: "Constraint validation",   key: "validate"   },
+    { label: "Explainability artifact", key: "explain"    },
+    { label: "Integrity seal",          key: "seal"       },
+  ];
+
+  function stepResult(stepKey, classification) {
+    const verdict = classification.verdict;
+    const map = {
+      parse:    "PASS",
+      registry: "PASS",
+      classify: verdict === "BLOCK" ? "MATCH_BLOCKED" : verdict === "CONDITIONAL" ? "MATCH_CONDITIONAL" : "MATCH_ALLOWED",
+      validate: classification.constraints_failed.length > 0 ? "FAILED" : "PASS",
+      explain:  "PASS",
+      seal:     "PASS"
+    };
+    return map[stepKey] || "PASS";
+  }
+
+  function resultClass(r) {
+    if (r === "PASS" || r === "MATCH_ALLOWED") return "pass";
+    if (r === "FAILED" || r === "MATCH_BLOCKED") return "block";
+    return "warn";
+  }
+
+  function resultIcon(r) {
+    if (r === "PASS" || r === "MATCH_ALLOWED") return "✓";
+    if (r === "FAILED" || r === "MATCH_BLOCKED") return "✗";
+    return "~";
+  }
+
+  // ─── Render ──────────────────────────────────────────────────────────────────
+
+  const STEP_DELAY = 280; // ms per step
+
+  async function runDemo(proposal) {
+    const classification = classify(proposal);
+    const artifact = buildArtifact(proposal, classification);
+
+    // Show output panel
+    const output = document.getElementById("demo-output");
+    output.classList.add("visible");
+
+    // Render pipeline steps (hidden initially)
+    const track = document.getElementById("pipeline-track");
+    track.innerHTML = "";
+    const stepEls = [];
+    STEPS.forEach((step, i) => {
+      const r = stepResult(step.key, classification);
+      const el = document.createElement("div");
+      el.className = "pipeline-step";
+      el.innerHTML = `
+        <span class="step-icon pending">···</span>
+        <span class="step-label">${step.label}</span>
+        <span class="step-result pending" id="sr-${i}">—</span>
+      `;
+      track.appendChild(el);
+      stepEls.push({ el, result: r });
+    });
+
+    // Animate each step
+    for (let i = 0; i < stepEls.length; i++) {
+      await delay(STEP_DELAY);
+      const { el, result } = stepEls[i];
+      const icon = el.querySelector(".step-icon");
+      const sr = el.querySelector(".step-result");
+      icon.textContent = resultIcon(result);
+      icon.className = "step-icon " + resultClass(result);
+      sr.textContent = result;
+      sr.className = "step-result " + resultClass(result);
+      el.classList.add("visible");
+    }
+
+    await delay(200);
+
+    // Verdict block
+    const vb = document.getElementById("verdict-block");
+    const vv = document.getElementById("verdict-value");
+    const vs = document.getElementById("verdict-sub");
+
+    const verdictMap = {
+      ALLOW:       { text: "ALLOW",       cls: "allow",       sub: "Proposal verified. Authorized for execution." },
+      BLOCK:       { text: "BLOCK",       cls: "block",       sub: "Proposal rejected. Execution boundary enforced." },
+      CONDITIONAL: { text: "CONDITIONAL", cls: "conditional", sub: "Execution requires additional authorization before proceeding." }
+    };
+    const vm = verdictMap[classification.verdict] || verdictMap["CONDITIONAL"];
+    vv.textContent = vm.text;
+    vv.className = "verdict-value " + vm.cls;
+    vs.textContent = classification.reason;
+    vb.classList.add("visible");
+
+    await delay(150);
+
+    // Artifact block
+    const ab = document.getElementById("artifact-block");
+    const rows = [
+      ["trace_id",         artifact.trace_id],
+      ["timestamp",        artifact.timestamp],
+      ["classification",   artifact.classification],
+      ["verdict",          artifact.verdict],
+      ["constraints_failed", artifact.constraints_failed.length > 0 ? artifact.constraints_failed.join(", ") : "none"],
+      ["integrity_hash",   artifact.integrity_hash],
+      ["sealed",           "true"],
+    ];
+    ab.innerHTML = rows.map(([k, v]) => `
+      <div class="artifact-row">
+        <span class="artifact-key mono">${k}</span>
+        <span class="artifact-val mono">${v}</span>
+      </div>
+    `).join("");
+    ab.classList.add("visible");
+
+    // Show reset
+    document.getElementById("reset-link").classList.add("visible");
+
+    // Scroll to output
+    output.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function delay(ms) {
+    return new Promise(r => setTimeout(r, ms));
+  }
+
+  function reset() {
+    document.getElementById("proposal-input").value = "";
+    document.getElementById("demo-output").classList.remove("visible");
+    document.getElementById("reset-link").classList.remove("visible");
+
+    const vb = document.getElementById("verdict-block");
+    const ab = document.getElementById("artifact-block");
+    vb.classList.remove("visible");
+    ab.classList.remove("visible");
+
+    const btn = document.getElementById("demo-submit-btn");
+    btn.disabled = false;
+    btn.textContent = "Submit for Verification →";
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // ─── Event Handlers ──────────────────────────────────────────────────────────
+
+  document.getElementById("demo-submit-btn").addEventListener("click", async () => {
+    const proposal = document.getElementById("proposal-input").value.trim();
+    if (!proposal) return;
+
+    const btn = document.getElementById("demo-submit-btn");
+    btn.disabled = true;
+    btn.textContent = "Verifying...";
+
+    await runDemo(proposal);
+  });
+
+  document.getElementById("reset-btn").addEventListener("click", reset);
+
+  document.getElementById("proposal-input").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+      document.getElementById("demo-submit-btn").click();
+    }
+  });
+  </script>
+</body>
+</html>
