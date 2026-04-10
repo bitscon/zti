@@ -138,6 +138,7 @@
 
   const form = document.querySelector(".request-form");
   const submitUrl = "https://n8n.zerotrustintelligence.io/webhook/zti-access";
+  const requestTimeoutMs = 4500;
 
   const localDecision = (payload) => {
     const text = `${payload.use_case || ""} ${payload.why_zti || ""}`.toLowerCase();
@@ -175,6 +176,17 @@
     };
   };
 
+  const postWithTimeout = async (url, options, timeoutMs) => {
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      return await fetch(url, { ...options, signal: controller.signal });
+    } finally {
+      window.clearTimeout(timer);
+    }
+  };
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -195,13 +207,13 @@
     };
 
     try {
-      const res = await fetch(submitUrl, {
+      const res = await postWithTimeout(submitUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify(payload)
-      });
+      }, requestTimeoutMs);
 
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
