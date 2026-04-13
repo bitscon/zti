@@ -1,5 +1,16 @@
 # AGENTS
 
+## Mandatory Context
+
+All agents MUST read:
+
+`/PROJECT_STATUS.md`
+
+before making website or demo workflow changes.
+
+`PROJECT_STATUS.md` is the canonical migration checkpoint, current-state summary,
+and next-steps source for this repository's website and demo systems.
+
 ## Website Source of Truth
 
 The website uses a barn-first, single-artifact workflow.
@@ -40,13 +51,13 @@ All agents MUST follow these rules:
 
 The terminal output is the only source of truth for the demo.
 
-1. Demo transcript artifacts are generated from runtime output.
+1. Demo transcript artifacts are generated from the deterministic demo compiler / canonical session model.
 2. Manual edits to generated transcript artifacts are forbidden.
 3. The canonical generated transcript path is:
 
    `/dev/site/_dist/assets/demo-output.txt`
 
-4. `resources/demo/terminal-output.md` and the site transcript asset MUST come from the same runtime export path.
+4. `resources/demo/terminal-output.md` and the site transcript asset MUST come from the same canonical export path.
 
 ## Agent Working Directory Requirement
 

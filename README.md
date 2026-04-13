@@ -22,6 +22,18 @@ Author: Chad McCormack
 
 ---
 
+## Current Project Status
+
+The website is on the barn-first, single-source workflow and the demo is compiled
+deterministically from a canonical session model.
+
+For the current migration checkpoint, completed work, known consistency gaps, and
+the next required actions, read:
+
+- [PROJECT_STATUS.md](PROJECT_STATUS.md)
+
+---
+
 ## What ZTI Is
 
 ZTI defines a new architectural layer in modern systems:

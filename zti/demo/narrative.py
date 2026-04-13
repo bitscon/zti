@@ -10,7 +10,7 @@ from zti.demo.engine import VerificationTrace, replay_all_results
 DIVIDER = "────────────────────────────────────────────"
 SOURCE_OF_TRUTH_NOTICE = (
     "Terminal output is the only source of truth. "
-    "All demo assets are generated from runtime output. "
+    "All demo assets are generated from the deterministic demo compiler / canonical session model. "
     "Manual editing is forbidden."
 )
 
@@ -203,7 +203,7 @@ def build_terminal_output_markdown() -> str:
     markdown_lines: list[str] = [
         "# ZTI Demo — Terminal Output",
         "",
-        "Generated from the `zti-demo` recording runtime. Do not edit manually.",
+        "Generated from the deterministic demo compiler. Do not edit manually.",
         SOURCE_OF_TRUTH_NOTICE,
         "",
     ]
@@ -225,7 +225,7 @@ def build_script_markdown() -> str:
     return "\n".join([
         "# ZTI Demo Script",
         "",
-        "Generated from the `zti-demo` recording runtime. Do not edit manually.",
+        "Generated from the deterministic demo compiler. Do not edit manually.",
         SOURCE_OF_TRUTH_NOTICE,
         "",
         "Goal: ~75–90 seconds total  ",
@@ -299,7 +299,7 @@ def build_recording_script_markdown() -> str:
     return "\n".join([
         "# Demo Recording Script",
         "",
-        "Generated from the `zti-demo` recording runtime. Do not edit manually.",
+        "Generated from the deterministic demo compiler. Do not edit manually.",
         SOURCE_OF_TRUTH_NOTICE,
         "",
         "Narration is part of the acceptance contract.",

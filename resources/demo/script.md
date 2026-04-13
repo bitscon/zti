@@ -1,7 +1,7 @@
 # ZTI Demo Script
 
-Generated from the `zti-demo` recording runtime. Do not edit manually.
-Terminal output is the only source of truth. All demo assets are generated from runtime output. Manual editing is forbidden.
+Generated from the deterministic demo compiler. Do not edit manually.
+Terminal output is the only source of truth. All demo assets are generated from the deterministic demo compiler / canonical session model. Manual editing is forbidden.
 
 Goal: ~75–90 seconds total  
 Tone: Calm, controlled, confident  
