@@ -32,6 +32,7 @@ REQUIRED_ARTIFACT_FILES = (
     'assets/site.css',
     'assets/site.js',
     'assets/demo-output.txt',
+    'assets/zti-demo.mp4',
 )
 
 
@@ -141,6 +142,18 @@ def _stage_transcript(output_dir: Path, project_root: Path) -> Path:
     return destination
 
 
+def _stage_demo_video(output_dir: Path, project_root: Path) -> Path:
+    video_source = project_root / 'resources' / 'demo' / 'build' / 'zti-demo.mp4'
+    if not video_source.exists():
+        raise FileNotFoundError(
+            f'Missing rendered demo video: {video_source}. Run ./ops/render-demo.sh before building the site.'
+        )
+    destination = output_dir / 'assets' / 'zti-demo.mp4'
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_bytes(video_source.read_bytes())
+    return destination
+
+
 def build_site(output_dir: Path, project_root: Path | None = None) -> Path:
     project_root = project_root or PROJECT_ROOT
     output_dir = output_dir.resolve()
@@ -149,6 +162,7 @@ def build_site(output_dir: Path, project_root: Path | None = None) -> Path:
     _copy_static(output_dir)
     _render_assets(output_dir, context)
     _stage_transcript(output_dir, project_root)
+    _stage_demo_video(output_dir, project_root)
     _render_pages(output_dir, context)
     return output_dir
 

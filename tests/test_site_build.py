@@ -26,8 +26,10 @@ class SiteBuildTests(unittest.TestCase):
             self.assertNotIn('>Core</span>', index_html)
             self.assertNotIn('>Core</span>', adopt_html)
             self.assertIn('href="/core/"', adopt_html)
+            self.assertIn('<source src="/assets/zti-demo.mp4" type="video/mp4" />', index_html)
+            self.assertTrue((artifact_out / "assets" / "zti-demo.mp4").exists())
 
-    def test_build_stages_runtime_transcript_into_output(self) -> None:
+    def test_build_stages_canonical_transcript_into_output(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_root = Path(tmp)
             project_root = Path.cwd()

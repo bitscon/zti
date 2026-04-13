@@ -2,22 +2,20 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
+DEMO_RESOURCE_ROOT = Path(__file__).resolve().parents[1] / "resources" / "demo"
+if str(DEMO_RESOURCE_ROOT) not in sys.path:
+    sys.path.insert(0, str(DEMO_RESOURCE_ROOT))
+
+import generate as demo_generate
 from zti.demo.audit import build_audit_report
 from zti.demo.engine import latest_trace, reset_runtime, run_scenario
 from zti.demo.export import export_terminal_output
-from zti.demo.narrative import (
-    build_recording_script_markdown,
-    build_terminal_output_text,
-    build_terminal_output_markdown,
-    render_audit_terminal,
-    render_cta_block,
-    render_scenario_terminal,
-    sync_demo_assets,
-)
+from zti.demo.narrative import render_audit_terminal, render_cta_block, render_scenario_terminal
 
 
 class DemoRuntimeTests(unittest.TestCase):
@@ -77,25 +75,7 @@ class DemoRuntimeTests(unittest.TestCase):
         self.assertIn("CONTROL GUARANTEE:", rendered)
         self.assertIn("No unverified decision reached execution", rendered)
 
-    def test_generated_assets_are_runtime_derived(self) -> None:
-        project_root = Path(self._tmpdir.name) / "project"
-        demo_dir = project_root / "resources" / "demo"
-        demo_dir.mkdir(parents=True)
-
-        sync_demo_assets(project_root)
-
-        script = (demo_dir / "script.md").read_text(encoding="utf-8")
-        recording = (demo_dir / "recording-script.md").read_text(encoding="utf-8")
-        terminal = (demo_dir / "terminal-output.md").read_text(encoding="utf-8")
-        exported_terminal = (project_root / "dev" / "site" / "_dist" / "assets" / "demo-output.txt").read_text(encoding="utf-8")
-
-        self.assertIn("Terminal output is the only source of truth.", script)
-        self.assertIn("Narration is part of the acceptance contract.", recording)
-        self.assertIn("STATUS: Your current systems operate on trust — not verification", terminal)
-        self.assertIn("WITHOUT ZTI: PASSED", terminal)
-        self.assertEqual(exported_terminal, build_terminal_output_text())
-
-    def test_export_terminal_output_writes_dist_site_asset(self) -> None:
+    def test_export_terminal_output_writes_canonical_site_asset(self) -> None:
         project_root = Path(self._tmpdir.name) / "project"
         output_path = export_terminal_output(project_root)
 
@@ -104,7 +84,7 @@ class DemoRuntimeTests(unittest.TestCase):
             project_root / "dev" / "site" / "_dist" / "assets" / "demo-output.txt",
         )
         self.assertTrue(output_path.exists())
-        self.assertEqual(output_path.read_text(encoding="utf-8"), build_terminal_output_text())
+        self.assertEqual(output_path.read_text(encoding="utf-8"), demo_generate.build_raw_transcript())
 
     def test_schema_required_keys_cover_payloads(self) -> None:
         reset_runtime("recording")
@@ -117,12 +97,29 @@ class DemoRuntimeTests(unittest.TestCase):
         self.assertTrue(set(trace_schema["required"]).issubset(trace.keys()))
         self.assertTrue(set(audit_schema["required"]).issubset(report.keys()))
 
-    def test_terminal_output_and_recording_docs_lock_psychological_payload(self) -> None:
-        terminal_md = build_terminal_output_markdown()
-        recording_md = build_recording_script_markdown()
+    def test_compiler_outputs_are_deterministic_and_verifiable(self) -> None:
+        first = demo_generate.build_artifacts()
+        second = demo_generate.build_artifacts()
+
+        self.assertEqual(first, second)
+        demo_generate.check_artifacts()
+
+    def test_compiler_cast_matches_transcript_and_required_lines(self) -> None:
+        transcript = demo_generate.build_raw_transcript()
+        cast_text = demo_generate.reconstruct_visible_text_from_cast(demo_generate.build_cast())
+
+        self.assertEqual(cast_text, transcript)
+        for required in demo_generate.REQUIRED_LINES:
+            self.assertIn(required, transcript)
+        for forbidden in demo_generate.FORBIDDEN_STRINGS:
+            self.assertNotIn(forbidden, transcript)
+        self.assertGreaterEqual(demo_generate.total_runtime_seconds(), 75)
+        self.assertLessEqual(demo_generate.total_runtime_seconds(), 90)
+
+    def test_recording_script_and_cta_lock_psychological_payload(self) -> None:
+        recording_md = demo_generate.build_recording_script_markdown()
         cta = render_cta_block()
 
-        self.assertIn("This Would Have Gotten Through", terminal_md)
         self.assertIn("1. This happens", recording_md)
         self.assertIn("2. We would not catch this", recording_md)
         self.assertIn("3. ZTI does", recording_md)

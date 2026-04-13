@@ -133,15 +133,13 @@ body {
   max-width: 800px;
 }
 
-#demo-video-placeholder {
+.demo-video {
+  display: block;
+  width: 100%;
   min-height: 400px;
   background: #111111;
   border: 1px solid #1f1f1f;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #6b6b6b;
-  padding: 24px;
+  object-fit: cover;
 }
 
 .demo-caption {
@@ -269,7 +267,7 @@ body {
     gap: 10px;
   }
 
-  #demo-video-placeholder {
+  .demo-video {
     min-height: 280px;
   }
 

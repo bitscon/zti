@@ -1,7 +1,7 @@
 # Demo Recording Script
 
-Generated from the `zti-demo` recording runtime. Do not edit manually.
-Terminal output is the only source of truth. All demo assets are generated from runtime output. Manual editing is forbidden.
+Generated from the deterministic demo compiler. Do not edit manually.
+Terminal output is the only source of truth. All demo assets are generated from the canonical session model. Manual editing is forbidden.
 
 Narration is part of the acceptance contract.
 Recording must match canonical narration phrases exactly.
@@ -36,11 +36,11 @@ No improvisation allowed in production recording.
 
 # ZTI Demo Script
 
-Generated from the `zti-demo` recording runtime. Do not edit manually.
-Terminal output is the only source of truth. All demo assets are generated from runtime output. Manual editing is forbidden.
+Generated from the deterministic demo compiler. Do not edit manually.
+Terminal output is the only source of truth. All demo assets are generated from the canonical session model. Manual editing is forbidden.
 
-Goal: ~75–90 seconds total  
-Tone: Calm, controlled, confident  
+Goal: ~75–90 seconds total
+Tone: Calm, controlled, confident
 Pacing: Slight pauses between sections (let it breathe)
 
 ## 0. Reset (Pre-roll — not narrated)
@@ -65,14 +65,11 @@ ZTI DEMO — INFRASTRUCTURE VERIFICATION
 SCENARIO: prod-us-east-migration-override
 SESSION: infra-2026-04-09-001
 ────────────────────────────────────────────
-
 RISK: Deployment to unapproved region
 IMPACT: Data sovereignty violation + compliance breach
 LIKELIHOOD: High (common pipeline misconfiguration)
-
 → Proposal received
 → Classification: infrastructure.deployment.ec2
-
 → Explainability generated
   - module: terraform-aws-ec2-instance
   - region: eu-central-1
@@ -85,6 +82,8 @@ DECISION: REJECTED
 CONFIDENCE: VERIFIED
 CONTROL: Execution blocked at verification boundary
 ```
+
+[pause 2.5s]
 
 Narration:
 > "ZTI doesn't trust the request.
@@ -105,14 +104,12 @@ ZTI DEMO — INFRASTRUCTURE VERIFICATION
 SCENARIO: prod-policy-near-miss
 SESSION: infra-2026-04-09-002
 ────────────────────────────────────────────
-
 RISK: Unauthorized production deployment
 IMPACT: Untracked infrastructure drift
 LIKELIHOOD: Medium-High
 
 → Proposal received
 → Classification: infrastructure.deployment.ec2
-
 → Explainability generated
   - module: terraform-aws-ec2-instance
   - region: us-east-1
@@ -140,7 +137,7 @@ Narration:
 > "Everything looks right...
 > this would pass most systems."
 
-(pause)
+[pause 2.0s]
 
 Narration:
 > "But the approval chain is wrong."
@@ -160,14 +157,12 @@ ZTI DEMO — INFRASTRUCTURE VERIFICATION
 SCENARIO: prod-capacity-approved
 SESSION: infra-2026-04-09-003
 ────────────────────────────────────────────
-
 RISK: Controlled infrastructure deployment
 IMPACT: Verified, auditable execution
 LIKELIHOOD: Approved
 
 → Proposal received
 → Classification: infrastructure.deployment.ec2
-
 → Explainability generated
 → Validation
   ✔ all constraints passed
@@ -204,7 +199,6 @@ Narration:
 ZTI AUDIT REPORT
 SESSION: infra-2026-04-09-003
 ────────────────────────────────────────────
-
 What was proposed:
 - EC2 deployment (Terraform)
 
@@ -227,6 +221,8 @@ This execution is fully reconstructable and provable
 CONTROL GUARANTEE:
 No unverified decision reached execution
 ```
+
+[pause 2.0s]
 
 Narration:
 > "This is the difference between trusting a system...

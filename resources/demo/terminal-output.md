@@ -1,31 +1,21 @@
 # ZTI Demo — Terminal Output
 
-Generated from the `zti-demo` recording runtime. Do not edit manually.
-Terminal output is the only source of truth. All demo assets are generated from runtime output. Manual editing is forbidden.
+Generated from the deterministic demo compiler. Do not edit manually.
+Terminal output is the only source of truth. All demo assets are generated from the canonical session model. Manual editing is forbidden.
 
-## 0. Reset (Pre-roll)
-```bash
-$ zti-demo reset --profile recording
-```
-
-## 1. Hook — This Could Happen Here
-```bash
-$ zti-demo run prod-us-east-migration-override --explain
-```
 ```text
+$ zti-demo reset --profile recording
+$ zti-demo run prod-us-east-migration-override --explain
 ────────────────────────────────────────────
 ZTI DEMO — INFRASTRUCTURE VERIFICATION
 SCENARIO: prod-us-east-migration-override
 SESSION: infra-2026-04-09-001
 ────────────────────────────────────────────
-
 RISK: Deployment to unapproved region
 IMPACT: Data sovereignty violation + compliance breach
 LIKELIHOOD: High (common pipeline misconfiguration)
-
 → Proposal received
 → Classification: infrastructure.deployment.ec2
-
 → Explainability generated
   - module: terraform-aws-ec2-instance
   - region: eu-central-1
@@ -37,26 +27,18 @@ LIKELIHOOD: High (common pipeline misconfiguration)
 DECISION: REJECTED
 CONFIDENCE: VERIFIED
 CONTROL: Execution blocked at verification boundary
-```
-
-## 2. Escalation — This Would Have Gotten Through
-```bash
 $ zti-demo run prod-policy-near-miss --explain
-```
-```text
 ────────────────────────────────────────────
 ZTI DEMO — INFRASTRUCTURE VERIFICATION
 SCENARIO: prod-policy-near-miss
 SESSION: infra-2026-04-09-002
 ────────────────────────────────────────────
-
 RISK: Unauthorized production deployment
 IMPACT: Untracked infrastructure drift
 LIKELIHOOD: Medium-High
 
 → Proposal received
 → Classification: infrastructure.deployment.ec2
-
 → Explainability generated
   - module: terraform-aws-ec2-instance
   - region: us-east-1
@@ -78,26 +60,18 @@ WITH ZTI: BLOCKED (approval.invalid_scope)
 DECISION: REJECTED
 CONFIDENCE: VERIFIED
 CONTROL: Execution blocked at verification boundary
-```
-
-## 3. Resolution — Only Verified Executes
-```bash
 $ zti-demo run prod-capacity-approved --explain
-```
-```text
 ────────────────────────────────────────────
 ZTI DEMO — INFRASTRUCTURE VERIFICATION
 SCENARIO: prod-capacity-approved
 SESSION: infra-2026-04-09-003
 ────────────────────────────────────────────
-
 RISK: Controlled infrastructure deployment
 IMPACT: Verified, auditable execution
 LIKELIHOOD: Approved
 
 → Proposal received
 → Classification: infrastructure.deployment.ec2
-
 → Explainability generated
 → Validation
   ✔ all constraints passed
@@ -115,18 +89,11 @@ CONFIDENCE: VERIFIED
   ✔ sandbox executor accepted verified artifact
 
 CONTROL: Only verified artifacts allowed to execute
-```
-
-## 4. Authority — This Is What Auditors Want
-```bash
 $ zti-demo audit infra-2026-04-09-003
-```
-```text
 ────────────────────────────────────────────
 ZTI AUDIT REPORT
 SESSION: infra-2026-04-09-003
 ────────────────────────────────────────────
-
 What was proposed:
 - EC2 deployment (Terraform)
 
@@ -148,10 +115,6 @@ This execution is fully reconstructable and provable
 
 CONTROL GUARANTEE:
 No unverified decision reached execution
-```
-
-## 5. Close — CTA
-```text
 ────────────────────────────────────────────
 STATUS: Your current systems operate on trust — not verification
 

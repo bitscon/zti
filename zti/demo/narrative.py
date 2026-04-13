@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+import subprocess
+import sys
 
 from zti.demo.audit import AuditReport, build_audit_report
 from zti.demo.engine import VerificationTrace, replay_all_results
@@ -337,11 +339,9 @@ def build_recording_script_markdown() -> str:
 
 def sync_demo_assets(project_root: Path | None = None) -> None:
     root = project_root or Path(__file__).resolve().parents[2]
-    demo_dir = root / "resources" / "demo"
-    demo_dir.mkdir(parents=True, exist_ok=True)
-    (demo_dir / "script.md").write_text(build_script_markdown(), encoding="utf-8")
-    (demo_dir / "recording-script.md").write_text(build_recording_script_markdown(), encoding="utf-8")
-    (demo_dir / "terminal-output.md").write_text(build_terminal_output_markdown(), encoding="utf-8")
+    generator = root / "resources" / "demo" / "generate.py"
+    subprocess.run([sys.executable, str(generator), "--write"], check=True, cwd=root)
+
     from zti.demo.export import export_terminal_output
 
     export_terminal_output(root)
