@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Request Access | ZTI Core</title>
-  <script src="/tailwindcss.js"></script>
+  <link href="{{GOOGLE_FONTS_URL}}" rel="stylesheet" />
   <style>
     :root {
       --bg: #090909;
@@ -60,12 +60,10 @@
     }
   </style>
 </head>
-<body>
-  <nav class="zti-global-nav">
-    <a href="/" data-nav="protocol">Protocol</a>
-    <a href="/adopt" data-nav="adopt">Adopt</a>
-  </nav>
+<body data-nav="adopt">
+  {{SIDEBAR}}
 
+  <main class="page-shell">
   <section class="request-shell">
     <h1>Request Access</h1>
     <p>
@@ -73,7 +71,7 @@
       This demo evaluates request intent locally and returns a deterministic decision record.
     </p>
 
-    <form class="request-form" action="/adopt/request-access/success" method="POST">
+    <form class="request-form" action="{{REQUEST_SUCCESS_URL}}" method="POST">
       <div>
         <label for="name">Name</label>
         <input id="name" type="text" name="name" autocomplete="name" required />
@@ -119,7 +117,9 @@
       </p>
     </form>
   </section>
+  </main>
 
+  <script src="{{ASSETS_URL}}/site.js"></script>
   <script>
   (function () {
     const path = window.location.pathname;
@@ -193,7 +193,7 @@
 
     const decision = localDecision(payload);
     sessionStorage.setItem("zti-decision", JSON.stringify(decision));
-    window.location.href = "/adopt/request-access/success";
+    window.location.href = "{{REQUEST_SUCCESS_URL}}";
   });
   </script>
 </body>

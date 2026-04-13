@@ -1,181 +1,166 @@
 # ZTI Demo — Terminal Output
 
-Illustrative simulation. Not runnable output.
-For narration context see `script.md`.
+Generated from the `zti-demo` recording runtime. Do not edit manually.
+Terminal output is the only source of truth. All demo assets are generated from runtime output. Manual editing is forbidden.
 
----
-
-## Scene 1 — Unsafe Proposal (Blocked)
-
-```
-$ ai-agent run --task "expand-prod-capacity" --output terraform-plan
-
-[AI AGENT]
-Generating infrastructure change proposal...
-
-  provider: aws
-  region:   eu-central-1
-  module:   terraform-aws-ec2-instance (v3.1.4)
-  count:    12
-  type:     m5.2xlarge
-
-Proposal complete. Submitting to ZTI verification layer.
+## 0. Reset (Pre-roll)
+```bash
+$ zti-demo reset --profile recording
 ```
 
+## 1. Hook — This Could Happen Here
+```bash
+$ zti-demo run prod-us-east-migration-override --explain
 ```
-[ZTI] Proposal received
-  session_id:    infra-2026-04-09-001
-  source:        ai-agent/prod-capacity-task
-  proposal_hash: a3f8c21d...
+```text
+────────────────────────────────────────────
+ZTI DEMO — INFRASTRUCTURE VERIFICATION
+SCENARIO: prod-us-east-migration-override
+SESSION: infra-2026-04-09-001
+────────────────────────────────────────────
 
-[ZTI] Stage 1 — Classification
-  Matching against Pattern Registry...
-  Matched class:     infrastructure-change
-  Registry version:  1.0.0
-  Status:            PASS
+RISK: Deployment to unapproved region
+IMPACT: Data sovereignty violation + compliance breach
+LIKELIHOOD: High (common pipeline misconfiguration)
 
-[ZTI] Stage 2 — Explainability
-  Generating evidence artifact...
-  Matched signals:   resource_provisioning, region_declaration, module_reference
-  Status:            PASS
+→ Proposal received
+→ Classification: infrastructure.deployment.ec2
 
-[ZTI] Stage 3 — Validation
-  Checking declared constraints...
+→ Explainability generated
+  - module: terraform-aws-ec2-instance
+  - region: eu-central-1
+  - instance_count: 3
 
-  ✓ module in approved set:        terraform-aws-ec2-instance
-  ✗ region in approved set:        eu-central-1 NOT IN [us-east-1, us-west-2]
+→ Validation
+  ✖ region.not_in_approved_set
 
-  Constraint violation detected.
-  Admissibility check: FAIL
-
-[ZTI] Decision
-  Result:          REJECTED
-  Reason:          CONSTRAINT_VIOLATION — region.not_in_approved_set
-  Rejection hash:  7b2e09fa4c1d...
-  Mode:            ENFORCEMENT
-
-[ZTI] Rejection artifact sealed.
-  record_id:       infra-2026-04-09-001:rejected
-  decision_hash:   7b2e09fa4c1d...
-  previous_hash:   0000000000000000...
-  timestamp_ns:    1744214400000000000
-  chain_hash:      d9f3a18e...
-
-Execution system: NO ARTIFACT FORWARDED
+DECISION: REJECTED
+CONFIDENCE: VERIFIED
+CONTROL: Execution blocked at verification boundary
 ```
 
+## 2. Escalation — This Would Have Gotten Through
+```bash
+$ zti-demo run prod-policy-near-miss --explain
 ```
-[EXECUTION SYSTEM]
-No verified decision artifact received for session infra-2026-04-09-001.
-Infrastructure change did not execute.
-```
+```text
+────────────────────────────────────────────
+ZTI DEMO — INFRASTRUCTURE VERIFICATION
+SCENARIO: prod-policy-near-miss
+SESSION: infra-2026-04-09-002
+────────────────────────────────────────────
 
----
+RISK: Unauthorized production deployment
+IMPACT: Untracked infrastructure drift
+LIKELIHOOD: Medium-High
 
-## Scene 2 — Compliant Proposal (Verified and Allowed)
+→ Proposal received
+→ Classification: infrastructure.deployment.ec2
 
-```
-$ ai-agent run --task "expand-prod-capacity" --output terraform-plan
+→ Explainability generated
+  - module: terraform-aws-ec2-instance
+  - region: us-east-1
+  - instance_count: 2
+  - instance_type: m5.xlarge
 
-[AI AGENT]
-Generating infrastructure change proposal...
+→ Validation
+  ✔ region.approved
+  ✔ module.approved
+  ✔ instance_type.approved
+  ✔ instance_count.within_limit
 
-  provider: aws
-  region:   us-east-1
-  module:   terraform-aws-ec2-instance (v3.1.4)
-  count:    8
-  type:     m5.xlarge
-  approved_by: platform-lead@example.com
+→ Lineage verification
+  ✖ approval.invalid_scope
 
-Proposal complete. Submitting to ZTI verification layer.
-```
+WITHOUT ZTI: PASSED
+WITH ZTI: BLOCKED (approval.invalid_scope)
 
-```
-[ZTI] Proposal received
-  session_id:    infra-2026-04-09-002
-  source:        ai-agent/prod-capacity-task
-  proposal_hash: 9c1d7a3f...
-
-[ZTI] Stage 1 — Classification
-  Matching against Pattern Registry...
-  Matched class:     infrastructure-change
-  Registry version:  1.0.0
-  Status:            PASS
-
-[ZTI] Stage 2 — Explainability
-  Generating evidence artifact...
-  Matched signals:   resource_provisioning, region_declaration, module_reference, approval_present
-  Explanation:       Proposal matched infrastructure-change class via required signals.
-                     All contributing signals present and weighted above threshold.
-  Status:            PASS
-
-[ZTI] Stage 3 — Validation
-  Checking declared constraints...
-
-  ✓ module in approved set:        terraform-aws-ec2-instance
-  ✓ region in approved set:        us-east-1
-  ✓ instance count within limit:   8 ≤ 10
-  ✓ instance type in approved set: m5.xlarge
-  ✓ required approval present:     platform-lead@example.com
-  ✓ schema compliance:             PASS
-
-  All constraints satisfied.
-  Admissibility check: PASS
-
-[ZTI] Stage 4 — Integrity
-  Sealing decision artifact...
-  decision_hash:  9c1d7a3f...
-  previous_hash:  7b2e09fa4c1d...
-  timestamp_ns:   1744214520000000000
-  chain_hash:     f1a92cc3...
-
-[ZTI] Stage 5 — Lineage
-  Recording approval entry...
-  entry_id:       lin-2026-04-09-002-a
-  approver_id:    platform-lead@example.com
-  action:         approve
-  entry_hash:     e8b34d21...
-
-[ZTI] Decision
-  Result:         VERIFIED
-  record_id:      infra-2026-04-09-002:infrastructure-change
-  decision_hash:  f1a92cc3...
-  Mode:           ENFORCEMENT
-
-Forwarding verified decision artifact to execution system.
+DECISION: REJECTED
+CONFIDENCE: VERIFIED
+CONTROL: Execution blocked at verification boundary
 ```
 
+## 3. Resolution — Only Verified Executes
+```bash
+$ zti-demo run prod-capacity-approved --explain
 ```
-[EXECUTION SYSTEM]
-Verified decision artifact received.
-  record_id:      infra-2026-04-09-002:infrastructure-change
-  decision_hash:  f1a92cc3...
-  chain_valid:    true
-  lineage_valid:  true
+```text
+────────────────────────────────────────────
+ZTI DEMO — INFRASTRUCTURE VERIFICATION
+SCENARIO: prod-capacity-approved
+SESSION: infra-2026-04-09-003
+────────────────────────────────────────────
 
-Executing infrastructure change from verified artifact.
+RISK: Controlled infrastructure deployment
+IMPACT: Verified, auditable execution
+LIKELIHOOD: Approved
+
+→ Proposal received
+→ Classification: infrastructure.deployment.ec2
+
+→ Explainability generated
+→ Validation
+  ✔ all constraints passed
+
+→ Integrity check
+  ✔ artifact sealed
+
+→ Lineage recorded
+  ✔ approval chain verified
+
+DECISION: APPROVED
+CONFIDENCE: VERIFIED
+
+→ Execution
+  ✔ sandbox executor accepted verified artifact
+
+CONTROL: Only verified artifacts allowed to execute
 ```
 
----
-
-## Audit Reconstruction (Post-Execution)
-
+## 4. Authority — This Is What Auditors Want
+```bash
+$ zti-demo audit infra-2026-04-09-003
 ```
-$ zti audit --session infra-2026-04-09-002
+```text
+────────────────────────────────────────────
+ZTI AUDIT REPORT
+SESSION: infra-2026-04-09-003
+────────────────────────────────────────────
 
-[ZTI AUDIT]
-session_id:         infra-2026-04-09-002
+What was proposed:
+- EC2 deployment (Terraform)
 
-Proposal:           9c1d7a3f...  (AI-generated Terraform plan)
-Decision class:     infrastructure-change
-Policy version:     1.0.0
-Constraints passed: 6/6
-Explanation:        [evidence artifact — see record]
-Decision artifact:  f1a92cc3...
-Approver:           platform-lead@example.com
-Chain valid:        true
-Lineage valid:      true
-Executed artifact:  f1a92cc3...  ← matches decision hash
+What was blocked:
+- Region violation (Session 001)
+- Invalid approval chain (Session 002)
 
-Audit complete. Chain is intact. No tampering detected.
+What was executed:
+- Verified, policy-compliant artifact only
+
+Who approved:
+- Authorized identity (production scope)
+
+Chain integrity: VALID
+Lineage integrity: VALID
+
+AUDIT READINESS:
+This execution is fully reconstructable and provable
+
+CONTROL GUARANTEE:
+No unverified decision reached execution
+```
+
+## 5. Close — CTA
+```text
+────────────────────────────────────────────
+STATUS: Your current systems operate on trust — not verification
+
+ZTI CORE:
+- Enforces verification at execution time
+- Produces audit-ready lineage automatically
+- Eliminates trust-based infrastructure risk
+
+NEXT STEP:
+Request access to deploy ZTI Core in your environment
+────────────────────────────────────────────
 ```

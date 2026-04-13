@@ -1,0 +1,105 @@
+<style>
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 160px;
+    height: 100vh;
+    background: #111111;
+    border-right: 1px solid #1f1f1f;
+    padding: 24px 16px;
+    box-sizing: border-box;
+    z-index: 80;
+  }
+
+  .sidebar-header {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #ffffff;
+    margin: 0 0 28px;
+  }
+
+  .nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-list li {
+    margin-bottom: 16px;
+  }
+
+  .nav-list a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 10px;
+    border-left: 2px solid transparent;
+    color: #9a9a9a;
+    text-decoration: none;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    transition: color 0.16s ease, border-color 0.16s ease;
+  }
+
+  .nav-list a:hover {
+    color: #ffffff;
+  }
+
+  .nav-list a.active {
+    color: #f5a623;
+    font-weight: 600;
+    border-left-color: #f5a623;
+  }
+
+  .sidebar-dot {
+    font-size: 0.55rem;
+    line-height: 1;
+    color: inherit;
+  }
+
+  .page-shell {
+    margin-left: 160px;
+    min-height: 100vh;
+  }
+
+  @media (max-width: 900px) {
+    .sidebar {
+      width: 148px;
+    }
+
+    .page-shell {
+      margin-left: 148px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .sidebar {
+      width: 140px;
+      padding: 20px 14px;
+    }
+
+    .sidebar-header {
+      font-size: 1rem;
+    }
+
+    .nav-list a {
+      font-size: 0.84rem;
+      gap: 8px;
+      padding-left: 8px;
+    }
+
+    .page-shell {
+      margin-left: 140px;
+    }
+  }
+</style>
+
+<nav class="sidebar" aria-label="Primary">
+  <div class="sidebar-header">ZTI</div>
+  <ul class="nav-list">
+{{NAV_ITEMS}}
+  </ul>
+</nav>

@@ -1,133 +1,216 @@
 # ZTI Demo Script
 
-## Scenario: AI-Generated Infrastructure Change
+Generated from the `zti-demo` recording runtime. Do not edit manually.
+Terminal output is the only source of truth. All demo assets are generated from runtime output. Manual editing is forbidden.
 
-An AI agent operating inside a CI/CD pipeline proposes a Terraform infrastructure change.
-This demo walks through two outcomes: a proposal that fails verification and one that passes.
+Goal: ~75–90 seconds total  
+Tone: Calm, controlled, confident  
+Pacing: Slight pauses between sections (let it breathe)
 
-The full terminal simulation is in `terminal-output.md`.
+## 0. Reset (Pre-roll — not narrated)
+```bash
+$ zti-demo reset --profile recording
+```
 
----
+(No narration — clean slate, deterministic run)
 
-## Setup
+## 1. Hook — THIS COULD HAPPEN HERE (~15 sec)
+```bash
+$ zti-demo run prod-us-east-migration-override --explain
+```
 
-**What is being demonstrated:**
+Narration:
+> "This is a standard infrastructure change.
+> Looks normal... nothing unusual."
 
-The ZTI verification layer intercepting an AI-generated proposal at the execution boundary —
-before any change reaches infrastructure.
+```text
+────────────────────────────────────────────
+ZTI DEMO — INFRASTRUCTURE VERIFICATION
+SCENARIO: prod-us-east-migration-override
+SESSION: infra-2026-04-09-001
+────────────────────────────────────────────
 
-**What this is not:**
+RISK: Deployment to unapproved region
+IMPACT: Data sovereignty violation + compliance breach
+LIKELIHOOD: High (common pipeline misconfiguration)
 
-- A demo of AI capability
-- A demo of ZTI improving AI output quality
-- A demonstration that ZTI makes AI correct
+→ Proposal received
+→ Classification: infrastructure.deployment.ec2
 
-**What this is:**
+→ Explainability generated
+  - module: terraform-aws-ec2-instance
+  - region: eu-central-1
+  - instance_count: 3
 
-A demonstration that only a proposal satisfying the declared execution contract
-is allowed to cross from generation into execution.
+→ Validation
+  ✖ region.not_in_approved_set
 
----
+DECISION: REJECTED
+CONFIDENCE: VERIFIED
+CONTROL: Execution blocked at verification boundary
+```
 
-## Cast
+Narration:
+> "ZTI doesn't trust the request.
+> It verifies it — before anything runs."
 
-| Actor | Role |
-|---|---|
-| AI Agent | Generates a Terraform change proposal |
-| ZTI Verification Layer | Classifies, validates, seals, or rejects |
-| Execution System | Only receives verified decision artifacts |
+## 2. Escalation — THIS WOULD HAVE GOTTEN THROUGH (~25 sec)
+```bash
+$ zti-demo run prod-policy-near-miss --explain
+```
 
----
+Narration:
+> "Now let's look at something more realistic...
+> This one appears fully compliant."
 
-## Scene 1 — Unsafe Proposal (Blocked)
+```text
+────────────────────────────────────────────
+ZTI DEMO — INFRASTRUCTURE VERIFICATION
+SCENARIO: prod-policy-near-miss
+SESSION: infra-2026-04-09-002
+────────────────────────────────────────────
 
-### Narration
+RISK: Unauthorized production deployment
+IMPACT: Untracked infrastructure drift
+LIKELIHOOD: Medium-High
 
-> An AI agent has generated a Terraform plan recommending a change to production infrastructure.
-> The plan proposes deploying resources in a region outside the organization's declared policy,
-> without the required approval entry in the lineage record.
+→ Proposal received
+→ Classification: infrastructure.deployment.ec2
 
-> The proposal reaches the ZTI verification layer.
+→ Explainability generated
+  - module: terraform-aws-ec2-instance
+  - region: us-east-1
+  - instance_count: 2
+  - instance_type: m5.xlarge
 
-> ZTI classifies the proposal against the Pattern Registry.
-> The proposal matches the `infrastructure-change` decision class.
+→ Validation
+  ✔ region.approved
+  ✔ module.approved
+  ✔ instance_type.approved
+  ✔ instance_count.within_limit
 
-> ZTI moves to validation. It checks the declared constraints:
-> - Approved regions: `us-east-1`, `us-west-2`
-> - Proposed region: `eu-central-1`
+→ Lineage verification
+  ✖ approval.invalid_scope
 
-> The proposed region is outside the allowed set.
+WITHOUT ZTI: PASSED
+WITH ZTI: BLOCKED (approval.invalid_scope)
 
-> ZTI does not degrade gracefully. The pathway to execution is closed.
-> The proposal is logged with a sealed rejection artifact.
-> The AI is not stopped. The execution boundary held.
+DECISION: REJECTED
+CONFIDENCE: VERIFIED
+CONTROL: Execution blocked at verification boundary
+```
 
-### What the audience sees
+Narration:
+> "Everything looks right...
+> this would pass most systems."
 
-Terminal output showing:
-- AI proposal received
-- ZTI classification (matched class: infrastructure-change)
-- ZTI validation: FAIL — region constraint violation
-- Rejection artifact sealed with decision hash
-- Execution system: no artifact received
+(pause)
 
----
+Narration:
+> "But the approval chain is wrong."
 
-## Scene 2 — Compliant Proposal (Verified and Allowed)
+## 3. Resolution — ONLY VERIFIED EXECUTES (~20 sec)
+```bash
+$ zti-demo run prod-capacity-approved --explain
+```
 
-### Narration
+Narration:
+> "Now — same type of change...
+> but fully verified."
 
-> A second proposal is generated. This time the AI agent has produced a plan
-> within the approved region, referencing approved modules, within the declared
-> blast-radius limit, with the required approval entry recorded.
+```text
+────────────────────────────────────────────
+ZTI DEMO — INFRASTRUCTURE VERIFICATION
+SCENARIO: prod-capacity-approved
+SESSION: infra-2026-04-09-003
+────────────────────────────────────────────
 
-> The proposal reaches the ZTI verification layer.
+RISK: Controlled infrastructure deployment
+IMPACT: Verified, auditable execution
+LIKELIHOOD: Approved
 
-> ZTI classifies it. Pattern match: `infrastructure-change`.
+→ Proposal received
+→ Classification: infrastructure.deployment.ec2
 
-> ZTI validates all declared constraints. Each check passes.
+→ Explainability generated
+→ Validation
+  ✔ all constraints passed
 
-> ZTI generates an explanation artifact — an explicit record of which signals matched
-> and which policy conditions were satisfied.
+→ Integrity check
+  ✔ artifact sealed
 
-> ZTI seals the decision artifact with a cryptographic hash and records
-> the approval lineage.
+→ Lineage recorded
+  ✔ approval chain verified
 
-> The sealed artifact crosses the execution boundary.
-> The execution system receives exactly this artifact — not the raw AI output.
-> Not the Terraform plan text. The verified decision artifact.
+DECISION: APPROVED
+CONFIDENCE: VERIFIED
 
-> Auditors can now reconstruct: what was proposed, what policy passed, who approved it,
-> and which artifact hash reached execution. The record is tamper-evident.
+→ Execution
+  ✔ sandbox executor accepted verified artifact
 
-> ZTI did not evaluate whether the infrastructure change was a good idea.
-> It evaluated whether the proposal satisfied the declared contract for execution.
+CONTROL: Only verified artifacts allowed to execute
+```
 
-### What the audience sees
+Narration:
+> "ZTI doesn't block infrastructure...
+> it ensures only verified infrastructure runs."
 
-Terminal output showing:
-- AI proposal received
-- ZTI classification (matched class: infrastructure-change)
-- ZTI validation: PASS — all constraints satisfied
-- Explanation artifact generated
-- Decision artifact sealed (decision hash shown)
-- Execution system: verified artifact received
-- Lineage record: sealed, auditable
+## 4. Authority — THIS IS WHAT AUDITORS WANT (~20 sec)
+```bash
+$ zti-demo audit infra-2026-04-09-003
+```
 
----
+Narration:
+> "Now — audit the execution."
 
-## Closing Line
+```text
+────────────────────────────────────────────
+ZTI AUDIT REPORT
+SESSION: infra-2026-04-09-003
+────────────────────────────────────────────
 
-> AI generated the proposal.
-> ZTI verified it.
-> Only the verified decision executed.
+What was proposed:
+- EC2 deployment (Terraform)
 
----
+What was blocked:
+- Region violation (Session 001)
+- Invalid approval chain (Session 002)
 
-## Key Points to Land
+What was executed:
+- Verified, policy-compliant artifact only
 
-1. ZTI intercepted at the boundary — not inside the AI, not inside the execution system.
-2. The execution system never saw the raw AI output. It saw a sealed artifact.
-3. The rejection in Scene 1 was deterministic — not probabilistic, not heuristic.
-4. The approval in Scene 2 is reproducible. The same inputs will produce the same result.
-5. The audit trail exists before any incident occurs — not assembled after the fact.
+Who approved:
+- Authorized identity (production scope)
+
+Chain integrity: VALID
+Lineage integrity: VALID
+
+AUDIT READINESS:
+This execution is fully reconstructable and provable
+
+CONTROL GUARANTEE:
+No unverified decision reached execution
+```
+
+Narration:
+> "This is the difference between trusting a system...
+> and proving it."
+
+## 5. Close — CTA (~10 sec)
+```text
+────────────────────────────────────────────
+STATUS: Your current systems operate on trust — not verification
+
+ZTI CORE:
+- Enforces verification at execution time
+- Produces audit-ready lineage automatically
+- Eliminates trust-based infrastructure risk
+
+NEXT STEP:
+Request access to deploy ZTI Core in your environment
+────────────────────────────────────────────
+```
+
+Narration:
+> "ZTI doesn't trust AI or infrastructure decisions.
+> It proves them."

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ZTI Demo — See Verification in Action</title>
-  <script src="/tailwindcss.js"></script>
+  <link href="{{GOOGLE_FONTS_URL}}" rel="stylesheet" />
   <style>
     :root {
       --bg: #090909;
@@ -147,13 +147,10 @@
     }
   </style>
 </head>
-<body>
-  <nav class="zti-global-nav">
-    <a href="/" data-nav="protocol">Protocol</a>
-    <a href="/adopt" data-nav="adopt">Adopt</a>
-  </nav>
+<body data-nav="adopt">
+  {{SIDEBAR}}
 
-  <main class="demo-shell">
+  <main class="page-shell demo-shell">
     <div class="demo-header">
       <p class="eyebrow">ZTI · Live Demo</p>
       <h1>Submit a proposal.<br>Watch it get verified.</h1>
@@ -207,6 +204,7 @@
     </div>
   </main>
 
+  <script src="{{ASSETS_URL}}/site.js"></script>
   <script>
   (function () {
     // Nav active state

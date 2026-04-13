@@ -1,0 +1,280 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #090909;
+  color: #e7e7e7;
+  font-family: 'IBM Plex Sans', sans-serif;
+  line-height: 1.6;
+}
+
+.hero-shell {
+  text-align: center;
+}
+
+.hero-shell .container {
+  min-height: 78vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 110px;
+  padding-bottom: 84px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 72px 20px;
+}
+
+.container.narrow {
+  max-width: 700px;
+}
+
+.hero-shell h1 {
+  margin: 0;
+  font-size: clamp(2.9rem, 7vw, 5.6rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.hero-shell h1 span {
+  color: #f5a623;
+}
+
+.subheadline {
+  margin-top: 22px;
+  max-width: 28ch;
+  color: #9a9a9a;
+  font-size: clamp(1.08rem, 2.1vw, 1.35rem);
+}
+
+.cta-group {
+  margin-top: 34px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px 20px;
+  border: 1px solid #1f1f1f;
+  border-radius: 0;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.16s ease;
+}
+
+.btn.primary {
+  background: #f5a623;
+  border-color: #f5a623;
+  color: #050505;
+}
+
+.btn.primary:hover {
+  background: #ffc15c;
+  border-color: #ffc15c;
+}
+
+.btn.secondary {
+  background: transparent;
+  color: #e7e7e7;
+}
+
+.btn.secondary:hover {
+  border-color: #f5a623;
+  color: #f5a623;
+}
+
+.btn.large {
+  padding: 16px 28px;
+  font-size: 1.05rem;
+}
+
+.home-section {
+  border-top: 1px solid #1f1f1f;
+}
+
+.home-section h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.18;
+}
+
+.home-section p,
+.home-section li {
+  color: #c9d1d9;
+}
+
+.demo-shell {
+  text-align: center;
+}
+
+.demo-shell .container {
+  padding-top: 64px;
+}
+
+.video-container {
+  margin: 30px auto 0;
+  max-width: 800px;
+}
+
+#demo-video-placeholder {
+  min-height: 400px;
+  background: #111111;
+  border: 1px solid #1f1f1f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b6b6b;
+  padding: 24px;
+}
+
+.demo-caption {
+  margin-top: 18px;
+  color: #9a9a9a;
+}
+
+#demo-terminal-output {
+  margin-top: 24px;
+  min-height: 360px;
+  background: #000000;
+  border: 1px solid #1f1f1f;
+  padding: 20px;
+  color: #cfcfcf;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow: auto;
+}
+
+.demo-points {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+  color: #f5a623;
+  font-weight: 500;
+}
+
+.demo-points div {
+  color: inherit;
+}
+
+.problem-list,
+.authority-list {
+  margin-top: 20px;
+  padding: 0;
+  list-style: none;
+}
+
+.problem-list li,
+.authority-list li {
+  margin: 10px 0;
+}
+
+.problem-line {
+  margin-top: 20px;
+  font-weight: 600;
+  color: #f5a623;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.card {
+  background: #111111;
+  border: 1px solid #1f1f1f;
+  padding: 20px;
+}
+
+.card h3 {
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.card p {
+  margin: 0;
+  color: #9a9a9a;
+}
+
+.card.small {
+  text-align: center;
+  font-weight: 500;
+  color: #e7e7e7;
+}
+
+.cta-shell {
+  text-align: center;
+}
+
+.cta-shell .container {
+  padding-top: 84px;
+  padding-bottom: 96px;
+}
+
+.cta-shell h2 {
+  margin: 0 0 30px;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 56px 20px;
+  }
+
+  .hero-shell .container {
+    min-height: auto;
+    padding-top: 92px;
+    padding-bottom: 72px;
+  }
+
+  .hero-shell h1 {
+    font-size: 2.35rem;
+  }
+
+  .cta-group {
+    flex-direction: column;
+  }
+
+  .btn,
+  .btn.large {
+    width: 100%;
+  }
+
+  .demo-points {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #demo-video-placeholder {
+    min-height: 280px;
+  }
+
+  #demo-terminal-output {
+    min-height: 300px;
+    font-size: 0.8rem;
+  }
+}

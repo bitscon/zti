@@ -7,3 +7,7 @@ dist/
 build/
 .venv/
 marketing/
+.demo_runtime/
+dev/site/_preview/
+dev/site/_dist_prod/
+dev/site/_generated/

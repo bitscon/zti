@@ -28,6 +28,9 @@ Repository = "https://github.com/bitscon/zerotrustintelligence"
 Documentation = "https://github.com/bitscon/zerotrustintelligence/blob/master/whitepaper/zti-whitepaper.md"
 Issues = "https://github.com/bitscon/zerotrustintelligence/issues"
 
+[project.scripts]
+zti-demo = "zti.demo.cli:main"
+
 [tool.setuptools.packages.find]
 include = ["zti*"]
 
