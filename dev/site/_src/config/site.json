@@ -1,0 +1,21 @@
+{
+  "fonts_url": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap",
+  "show_core_in_navigation": false,
+  "navigation": [
+    {
+      "key": "protocol",
+      "label": "Protocol",
+      "route_key": "protocol"
+    },
+    {
+      "key": "adopt",
+      "label": "Adopt",
+      "route_key": "adopt"
+    },
+    {
+      "key": "core",
+      "label": "Core",
+      "route_key": "core"
+    }
+  ]
+}

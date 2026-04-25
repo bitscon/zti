@@ -31,6 +31,69 @@ jobs:
       - name: Run tests
         run: python -m pytest -q
 
+  site-consistency:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e . pytest
+
+      - name: Block legacy website tree edits in pull requests
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          git fetch --no-tags --prune --depth=1 origin "$BASE_REF"
+          python - "$BASE_REF" <<'PY'
+          import subprocess
+          import sys
+
+          changed = subprocess.check_output(
+              ["git", "diff", "--name-status", f"origin/{sys.argv[1]}...HEAD"],
+              text=True,
+          ).splitlines()
+          bad = []
+          for line in changed:
+              parts = line.split("\t")
+              status = parts[0]
+              for path in parts[1:]:
+                  if path.startswith("site/"):
+                      if status == "D":
+                          continue
+                      bad.append(path)
+                      continue
+                  if path.startswith("dev/site/") and not path.startswith("dev/site/_src/") and path != "dev/site/build.py":
+                      if status == "D":
+                          continue
+                      bad.append(path)
+          if bad:
+              print("Forbidden generated or legacy website path changes detected:")
+              for path in bad:
+                  print(path)
+              raise SystemExit(1)
+          PY
+
+      - name: Regenerate canonical demo artifacts
+        run: python -m zti.demo.cli reset --profile recording
+
+      - name: Verify generated demo docs are current
+        run: git diff --exit-code -- resources/demo/script.md resources/demo/recording-script.md resources/demo/terminal-output.md
+
+      - name: Verify deterministic site build
+        run: python dev/site/build.py --check
+
   build:
     runs-on: ubuntu-latest
 

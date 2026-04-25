@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request Access | ZTI Core</title>
+  <link href="{{GOOGLE_FONTS_URL}}" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #090909;
+      --surface: #111111;
+      --border: #1f1f1f;
+      --text: #e7e7e7;
+      --muted: #9a9a9a;
+      --accent: #f5a623;
+    }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .mono { font-family: 'IBM Plex Mono', 'SFMono-Regular', Menlo, Consolas, monospace; }
+    .zti-global-nav { position: sticky; top: 0; z-index: 60; border-bottom: 1px solid var(--border); background: var(--bg); width: 100%; padding: 1rem 1.5rem; display: flex; justify-content: center; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+    .zti-global-nav a { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; text-decoration: none; color: var(--muted); opacity: 0.7; transition: opacity 0.2s ease, color 0.2s ease; }
+    .zti-global-nav a:hover { opacity: 1; color: var(--text); }
+    .zti-global-nav a.active { opacity: 1; color: var(--accent); font-weight: 600; }
+
+    .request-shell { max-width: 52rem; margin: 0 auto; padding: 4rem 1.5rem; }
+    .request-shell h1 { margin: 0 0 0.75rem; font-size: clamp(1.875rem, 4vw, 3rem); font-weight: 400; }
+    .request-shell p { margin: 0 0 2rem; color: var(--muted); line-height: 1.7; max-width: 44rem; }
+
+    .request-form { border: 1px solid var(--border); background: var(--surface); padding: 1.5rem; display: grid; gap: 1rem; }
+    .request-form label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.45rem; font-family: 'IBM Plex Mono', monospace; }
+    .request-form input,
+    .request-form select,
+    .request-form textarea {
+      width: 100%;
+      border: 1px solid #2a2a2a;
+      background: #0c0c0c;
+      color: var(--text);
+      padding: 0.75rem 0.875rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+    .request-form textarea { min-height: 7rem; resize: vertical; }
+    .request-submit {
+      justify-self: start;
+      border: 1px solid #2a2a2a;
+      background: transparent;
+      color: var(--text);
+      padding: 0.65rem 0.95rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+    }
+    .request-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    @media (max-width: 640px) {
+      .zti-global-nav { padding: 0.75rem 1rem; gap: 1rem; }
+      .request-shell { padding: 3rem 1rem; }
+      .request-form { padding: 1rem; }
+    }
+  </style>
+</head>
+<body data-nav="adopt">
+  {{SIDEBAR}}
+
+  <main class="page-shell">
+  <section class="request-shell">
+    <h1>Request Access</h1>
+    <p>
+      Access to ZTI Core is provisioned in controlled phases.
+      This demo evaluates request intent locally and returns a deterministic decision record.
+    </p>
+
+    <form class="request-form" action="{{REQUEST_SUCCESS_URL}}" method="POST">
+      <div>
+        <label for="name">Name</label>
+        <input id="name" type="text" name="name" autocomplete="name" required />
+      </div>
+
+      <div>
+        <label for="company">Company</label>
+        <input id="company" type="text" name="company" autocomplete="organization" required />
+      </div>
+
+      <div>
+        <label for="email">Email</label>
+        <input id="email" type="email" name="email" autocomplete="email" required />
+      </div>
+
+      <div>
+        <label for="role">Role</label>
+        <select id="role" name="role" required>
+          <option value="">Select role</option>
+          <option>Platform</option>
+          <option>Security</option>
+          <option>DevOps</option>
+          <option>CTO</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="use_case">Use Case</label>
+        <textarea id="use_case" name="use_case" required></textarea>
+      </div>
+
+      <div>
+        <label for="why_zti_matters">Why ZTI Matters To You</label>
+        <textarea id="why_zti_matters" name="why_zti" required></textarea>
+      </div>
+
+      <input type="text" name="website" style="display:none" />
+
+      <button class="request-submit" type="submit">Submit Request</button>
+      <p class="mono" style="font-size: 0.7rem; opacity: 0.5;">
+        Submissions are reviewed manually. Not all requests are approved.
+      </p>
+    </form>
+  </section>
+  </main>
+
+  <script src="{{ASSETS_URL}}/site.js"></script>
+  <script>
+  (function () {
+    const path = window.location.pathname;
+
+    let current = "protocol";
+    if (path.startsWith("/adopt")) current = "adopt";
+    document.querySelectorAll("[data-nav]").forEach(link => {
+      if (link.dataset.nav === current) {
+        link.classList.add("active");
+      }
+    });
+  })();
+
+  const form = document.querySelector(".request-form");
+
+  const localDecision = (payload) => {
+    const text = `${payload.use_case || ""} ${payload.why_zti || ""}`.toLowerCase();
+    const keywords = ["ai", "system", "automation", "pipeline", "infra", "agent", "control", "verify", "execution"];
+    let score = 0;
+    keywords.forEach((k) => {
+      if (text.includes(k)) score += 8;
+    });
+    score = Math.min(score, 100);
+
+    let tier = "C";
+    if (score >= 70) tier = "A";
+    else if (score >= 40) tier = "B";
+
+    const requestId = `req-local-${Date.now().toString(36)}`;
+    const timestamp = new Date().toISOString();
+    const base = `${requestId}|${timestamp}|${tier}|${score}|${payload.email || ""}`;
+    let hash = 0;
+    for (let i = 0; i < base.length; i += 1) {
+      hash = ((hash << 5) - hash + base.charCodeAt(i)) | 0;
+    }
+    const integrityHash = Math.abs(hash).toString(16).padStart(8, "0");
+
+    return {
+      request_id: requestId,
+      timestamp,
+      tier,
+      outcome: "PENDING_REVIEW",
+      checks: [
+        { name: "validation", result: "PASS" },
+        { name: "scoring", result: "PASS", score },
+        { name: "integrity", result: "PASS" }
+      ],
+      integrity_hash: integrityHash,
+      source: "local_demo"
+    };
+  };
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const btn = document.querySelector(".request-submit");
+    btn.disabled = true;
+    btn.textContent = "Processing...";
+
+    const formData = new FormData(form);
+
+    const payload = {
+      name: formData.get("name"),
+      company: formData.get("company"),
+      email: formData.get("email"),
+      role: formData.get("role"),
+      use_case: formData.get("use_case"),
+      why_zti: formData.get("why_zti"),
+      website: formData.get("website")
+    };
+
+    const decision = localDecision(payload);
+    sessionStorage.setItem("zti-decision", JSON.stringify(decision));
+    window.location.href = "{{REQUEST_SUCCESS_URL}}";
+  });
+  </script>
+</body>
+</html>

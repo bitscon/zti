@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request Received | ZTI Core</title>
+  <link href="{{GOOGLE_FONTS_URL}}" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #090909;
+      --surface: #111111;
+      --border: #1f1f1f;
+      --text: #e7e7e7;
+      --muted: #9a9a9a;
+      --accent: #f5a623;
+    }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .zti-global-nav { position: sticky; top: 0; z-index: 60; border-bottom: 1px solid var(--border); background: var(--bg); width: 100%; padding: 1rem 1.5rem; display: flex; justify-content: center; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+    .zti-global-nav a { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; text-decoration: none; color: var(--muted); opacity: 0.7; transition: opacity 0.2s ease, color 0.2s ease; }
+    .zti-global-nav a:hover { opacity: 1; color: var(--text); }
+    .zti-global-nav a.active { opacity: 1; color: var(--accent); font-weight: 600; }
+    .success-shell { max-width: 46rem; margin: 0 auto; padding: 4rem 1.5rem; }
+    .success-shell h1 { margin: 0 0 0.75rem; font-size: clamp(1.875rem, 4vw, 3rem); font-weight: 400; }
+    .success-shell p { margin: 0; color: var(--muted); line-height: 1.7; }
+    #zti-container { margin-top: 1rem; }
+    #zti-container strong { font-family: 'IBM Plex Mono', 'SFMono-Regular', Menlo, Consolas, monospace; font-weight: 500; letter-spacing: 0.04em; }
+    #zti-container p { color: var(--muted); }
+    @media (max-width: 640px) {
+      .zti-global-nav { padding: 0.75rem 1rem; gap: 1rem; }
+      .success-shell { padding: 3rem 1rem; }
+    }
+  </style>
+</head>
+<body data-nav="adopt">
+  {{SIDEBAR}}
+
+  <main class="page-shell">
+  <section class="success-shell">
+    <h1>ZTI Decision Record</h1>
+    <p style="margin-bottom:20px;color:#9a9a9a;">
+      Your request has been processed through the ZTI verification pipeline.
+      Each decision is evaluated deterministically and sealed with an integrity hash.
+    </p>
+    <div id="zti-container"></div>
+  </section>
+  </main>
+
+  <script src="{{ASSETS_URL}}/site.js"></script>
+  <script>
+  const data = sessionStorage.getItem("zti-decision");
+  const container = document.getElementById("zti-container");
+
+  if (!data) {
+    container.innerHTML = "<p>No decision record found.</p>";
+  } else {
+    let d;
+    try {
+      d = JSON.parse(data);
+    } catch (err) {
+      container.innerHTML = "<p>No decision record found.</p>";
+      d = null;
+    }
+    if (!d) {
+      container.innerHTML = "<p>No decision record found.</p>";
+    } else {
+      const labelMap = {
+        validation: "Field Validation",
+        scoring: "Signal Evaluation",
+        integrity: "Integrity Verification"
+      };
+
+      const checks = (d.checks || []).map(c => {
+        let color = "#888";
+        if (c.result === "PASS") color = "#4caf50";
+        if (c.result === "PARTIAL") color = "#f5a623";
+        if (c.result === "FAIL") color = "#ff4d4d";
+
+        return `
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+          <span>${labelMap[c.name] || c.name}</span>
+          <span style="color:${color}">${c.result}</span>
+        </div>
+      `;
+      }).join("");
+
+      container.innerHTML = `
+      <div style="margin-top:20px;padding:20px;border:1px solid #333;background:#111;">
+        <div style="margin-top:20px;padding-top:10px;border-top:1px solid #1f1f1f;">
+          <div><strong>Request ID:</strong> ${d.request_id}</div>
+          <div><strong>Timestamp:</strong> ${d.timestamp}</div>
+          <div><strong>Tier:</strong> ${d.tier}</div>
+          <div><strong>Outcome:</strong> ${d.outcome}</div>
+          <p style="margin-top:8px;color:#9a9a9a;font-size:14px;">
+            This request has been accepted into the evaluation queue.
+            Final access decisions are based on system alignment and use-case requirements.
+          </p>
+        </div>
+
+        <div style="margin-top:20px;padding-top:10px;border-top:1px solid #1f1f1f;">
+          <strong>Verification Pipeline</strong>
+          ${checks}
+        </div>
+
+        <div style="margin-top:20px;padding-top:10px;border-top:1px solid #1f1f1f;font-size:12px;color:#aaa;">
+          <strong>Integrity Seal</strong><br/>
+          sha256:${d.integrity_hash}
+        </div>
+
+        <p style="margin-top:24px;font-size:13px;color:#777;">
+          This is ZTI processing your request in real time.
+          The same verification layer governs production AI execution.
+        </p>
+      </div>
+    `;
+    }
+  }
+  </script>
+</body>
+</html>

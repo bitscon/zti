@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bitscon.github.io/zerotrustintelligence/schemas/verification_trace.json",
+  "title": "VerificationTrace",
+  "type": "object",
+  "required": [
+    "scenario_id",
+    "session_id",
+    "risk",
+    "impact",
+    "likelihood",
+    "cause",
+    "proposal",
+    "classification",
+    "explainability",
+    "validation",
+    "integrity",
+    "lineage",
+    "decision",
+    "confidence",
+    "control",
+    "execution"
+  ],
+  "properties": {
+    "scenario_id": {"type": "string"},
+    "session_id": {"type": "string"},
+    "risk": {"type": "string"},
+    "impact": {"type": "string"},
+    "likelihood": {"type": "string"},
+    "cause": {"type": "string"},
+    "proposal": {"type": "object"},
+    "classification": {
+      "type": "object",
+      "required": ["value"],
+      "properties": {
+        "value": {"type": "string"}
+      }
+    },
+    "explainability": {"type": "object"},
+    "validation": {"type": "object"},
+    "integrity": {"type": "object"},
+    "lineage": {"type": "object"},
+    "decision": {"type": "string"},
+    "confidence": {"type": "string"},
+    "control": {"type": "string"},
+    "execution": {"type": "object"},
+    "comparison": {
+      "type": "object",
+      "required": ["without_zti", "with_zti"],
+      "properties": {
+        "without_zti": {"type": "string"},
+        "with_zti": {"type": "string"}
+      }
+    }
+  },
+  "additionalProperties": false
+}

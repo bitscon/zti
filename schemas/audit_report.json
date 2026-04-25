@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bitscon.github.io/zerotrustintelligence/schemas/audit_report.json",
+  "title": "AuditReport",
+  "type": "object",
+  "required": [
+    "session_id",
+    "what_was_proposed",
+    "what_was_blocked",
+    "what_was_executed",
+    "who_approved",
+    "chain_integrity",
+    "lineage_integrity",
+    "audit_readiness",
+    "control_guarantee",
+    "executed_artifact"
+  ],
+  "properties": {
+    "session_id": {"type": "string"},
+    "what_was_proposed": {"type": "array", "items": {"type": "string"}},
+    "what_was_blocked": {"type": "array", "items": {"type": "string"}},
+    "what_was_executed": {"type": "array", "items": {"type": "string"}},
+    "who_approved": {"type": "array", "items": {"type": "string"}},
+    "chain_integrity": {"type": "string"},
+    "lineage_integrity": {"type": "string"},
+    "audit_readiness": {"type": "string"},
+    "control_guarantee": {"type": "string"},
+    "executed_artifact": {"type": "string"}
+  },
+  "additionalProperties": false
+}

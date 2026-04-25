@@ -7,3 +7,6 @@ dist/
 build/
 .venv/
 marketing/
+.demo_runtime/
+dev/site/_dist/
+ops/deploy.env

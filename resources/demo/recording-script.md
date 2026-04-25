@@ -1,101 +1,248 @@
 # Demo Recording Script
 
-60–90 seconds. Word for word. Time each section as marked.
+Generated from the deterministic demo compiler. Do not edit manually.
+Terminal output is the only source of truth. All demo assets are generated from the canonical session model. Manual editing is forbidden.
 
-**Setup before recording:**
-- Terminal open, font size large enough to read at 1080p
-- `demo/terminal-output.md` queued for copy-paste
-- No other windows visible
-- No intro — start mid-screen, begin speaking on first keystroke
+Narration is part of the acceptance contract.
+Recording must match canonical narration phrases exactly.
+No improvisation allowed in production recording.
 
----
+## Delivery Notes
 
-## [0:00 – 0:10] Opening
+- Dark terminal theme
+- Large readable font
+- No typos
+- Clean scroll
+- Cursor visible but not distracting
+- Practice once — record second take
+- Pause after the first REJECTED
+- Pause after the WITHOUT ZTI / WITH ZTI comparison
+- Pause after the audit output
 
-**Say:**
-> "This is Zero Trust Intelligence — a verification layer between AI and execution.
-> I'm going to show you two proposals. One gets blocked. One gets through."
+## Psychological Payload
 
-**Show:** Empty terminal. Nothing running.
+1. This happens
+2. We would not catch this
+3. ZTI does
+4. ZTI proves it
+5. We need this
 
----
+## Critical Warning
 
-## [0:10 – 0:25] Scene 1 — Unsafe Proposal
+- Do not speed this up
+- Do not over-explain anything
+- Do not add extra commentary
+- The power of this demo is controlled silence plus obvious outcomes
 
-**Say:**
-> "An AI agent generates an infrastructure change. Terraform plan.
-> It looks reasonable. It hits the ZTI layer."
+# ZTI Demo Script
 
-**Show:** Paste and run Scene 1 terminal block through the classification step.
+Generated from the deterministic demo compiler. Do not edit manually.
+Terminal output is the only source of truth. All demo assets are generated from the canonical session model. Manual editing is forbidden.
 
-**Say:**
-> "ZTI classifies it — infrastructure-change. Moves to validation."
+Goal: ~75–90 seconds total
+Tone: Calm, controlled, confident
+Pacing: Slight pauses between sections (let it breathe)
 
-**Show:** Validation output appearing line by line.
+## 0. Reset (Pre-roll — not narrated)
+```bash
+$ zti-demo reset --profile recording
+```
 
-**Say:**
-> "Region: eu-central-1. Not in the approved set."
+(No narration — clean slate, deterministic run)
 
-**Pause 1 second.**
+## 1. Hook — THIS COULD HAPPEN HERE (~15 sec)
+```bash
+$ zti-demo run prod-us-east-migration-override --explain
+```
 
-**Show:** `CONSTRAINT_VIOLATION` line and rejection artifact sealed.
+Narration:
+> "This is a standard infrastructure change.
+> Looks normal... nothing unusual."
 
-**Say:**
-> "Blocked. Rejection artifact sealed. The execution system received nothing."
+```text
+────────────────────────────────────────────
+ZTI DEMO — INFRASTRUCTURE VERIFICATION
+SCENARIO: prod-us-east-migration-override
+SESSION: infra-2026-04-09-001
+────────────────────────────────────────────
+RISK: Deployment to unapproved region
+IMPACT: Data sovereignty violation + compliance breach
+LIKELIHOOD: High (common pipeline misconfiguration)
+→ Proposal received
+→ Classification: infrastructure.deployment.ec2
+→ Explainability generated
+  - module: terraform-aws-ec2-instance
+  - region: eu-central-1
+  - instance_count: 3
 
----
+→ Validation
+  ✖ region.not_in_approved_set
 
-## [0:25 – 0:45] Scene 2 — Compliant Proposal
+DECISION: REJECTED
+CONFIDENCE: VERIFIED
+CONTROL: Execution blocked at verification boundary
+```
 
-**Say:**
-> "Second proposal. Same task. This time the agent stays within policy."
+[pause 2.5s]
 
-**Show:** Paste and run Scene 2 terminal block through classification and validation.
+Narration:
+> "ZTI doesn't trust the request.
+> It verifies it — before anything runs."
 
-**Say:**
-> "Same classification. Validation runs."
+## 2. Escalation — THIS WOULD HAVE GOTTEN THROUGH (~25 sec)
+```bash
+$ zti-demo run prod-policy-near-miss --explain
+```
 
-**Show:** Constraint checks appearing, each with a checkmark.
+Narration:
+> "Now let's look at something more realistic...
+> This one appears fully compliant."
 
-**Say:**
-> "All six constraints pass."
+```text
+────────────────────────────────────────────
+ZTI DEMO — INFRASTRUCTURE VERIFICATION
+SCENARIO: prod-policy-near-miss
+SESSION: infra-2026-04-09-002
+────────────────────────────────────────────
+RISK: Unauthorized production deployment
+IMPACT: Untracked infrastructure drift
+LIKELIHOOD: Medium-High
 
-**Show:** Explanation artifact generated. Decision artifact sealed with hash.
+→ Proposal received
+→ Classification: infrastructure.deployment.ec2
+→ Explainability generated
+  - module: terraform-aws-ec2-instance
+  - region: us-east-1
+  - instance_count: 2
+  - instance_type: m5.xlarge
 
-**Say:**
-> "Explanation artifact. Decision sealed. Forwarded to the execution system."
+→ Validation
+  ✔ region.approved
+  ✔ module.approved
+  ✔ instance_type.approved
+  ✔ instance_count.within_limit
 
-**Show:** Execution system receives verified artifact line.
+→ Lineage verification
+  ✖ approval.invalid_scope
 
----
+WITHOUT ZTI: PASSED
+WITH ZTI: BLOCKED (approval.invalid_scope)
 
-## [0:45 – 1:00] Audit
+DECISION: REJECTED
+CONFIDENCE: VERIFIED
+CONTROL: Execution blocked at verification boundary
+```
 
-**Say:**
-> "Now — audit. Any point after execution."
+Narration:
+> "Everything looks right...
+> this would pass most systems."
 
-**Show:** Paste and run audit block.
+[pause 2.0s]
 
-**Say:**
-> "What was proposed. What policy it passed. Who approved it. Which hash executed.
-> Chain intact. No reconstruction required."
+Narration:
+> "But the approval chain is wrong."
 
----
+## 3. Resolution — ONLY VERIFIED EXECUTES (~20 sec)
+```bash
+$ zti-demo run prod-capacity-approved --explain
+```
 
-## [1:00 – 1:10] Closing
+Narration:
+> "Now — same type of change...
+> but fully verified."
 
-**Say:**
-> "AI generated the proposal. ZTI verified it. Only the verified decision executed.
-> The protocol is at bitscon/zerotrustintelligence."
+```text
+────────────────────────────────────────────
+ZTI DEMO — INFRASTRUCTURE VERIFICATION
+SCENARIO: prod-capacity-approved
+SESSION: infra-2026-04-09-003
+────────────────────────────────────────────
+RISK: Controlled infrastructure deployment
+IMPACT: Verified, auditable execution
+LIKELIHOOD: Approved
 
-**Show:** Terminal with the final audit output still visible. Fade or cut.
+→ Proposal received
+→ Classification: infrastructure.deployment.ec2
+→ Explainability generated
+→ Validation
+  ✔ all constraints passed
 
----
+→ Integrity check
+  ✔ artifact sealed
 
-## Production Notes
+→ Lineage recorded
+  ✔ approval chain verified
 
-- Do not explain what ZTI is during the demo. The actions explain it.
-- Do not say "this is really cool" or editorialize.
-- The pause after the rejection line is intentional — let it land.
-- If recording in one take, practice the Scene 1 → Scene 2 transition until it's clean.
-- Total target: 75 seconds. Under 90 is acceptable. Over 90, cut the audit section to one line.
+DECISION: APPROVED
+CONFIDENCE: VERIFIED
+
+→ Execution
+  ✔ sandbox executor accepted verified artifact
+
+CONTROL: Only verified artifacts allowed to execute
+```
+
+Narration:
+> "ZTI doesn't block infrastructure...
+> it ensures only verified infrastructure runs."
+
+## 4. Authority — THIS IS WHAT AUDITORS WANT (~20 sec)
+```bash
+$ zti-demo audit infra-2026-04-09-003
+```
+
+Narration:
+> "Now — audit the execution."
+
+```text
+────────────────────────────────────────────
+ZTI AUDIT REPORT
+SESSION: infra-2026-04-09-003
+────────────────────────────────────────────
+What was proposed:
+- EC2 deployment (Terraform)
+
+What was blocked:
+- Region violation (Session 001)
+- Invalid approval chain (Session 002)
+
+What was executed:
+- Verified, policy-compliant artifact only
+
+Who approved:
+- Authorized identity (production scope)
+
+Chain integrity: VALID
+Lineage integrity: VALID
+
+AUDIT READINESS:
+This execution is fully reconstructable and provable
+
+CONTROL GUARANTEE:
+No unverified decision reached execution
+```
+
+[pause 2.0s]
+
+Narration:
+> "This is the difference between trusting a system...
+> and proving it."
+
+## 5. Close — CTA (~10 sec)
+```text
+────────────────────────────────────────────
+STATUS: Your current systems operate on trust — not verification
+
+ZTI CORE:
+- Enforces verification at execution time
+- Produces audit-ready lineage automatically
+- Eliminates trust-based infrastructure risk
+
+NEXT STEP:
+Request access to deploy ZTI Core in your environment
+────────────────────────────────────────────
+```
+
+Narration:
+> "ZTI doesn't trust AI or infrastructure decisions.
+> It proves them."

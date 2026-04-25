@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZTI — Verify Every Decision</title>
+  <link href="{{GOOGLE_FONTS_URL}}" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ASSETS_URL}}/site.css" />
+</head>
+<body data-nav="protocol" data-transcript-url="{{TRANSCRIPT_URL}}">
+  {{SIDEBAR}}
+
+  <main class="page-shell">
+    <section class="hero-shell">
+      <div class="container">
+        <h1>
+          Your systems trust decisions.<br />
+          <span>ZTI verifies them.</span>
+        </h1>
+        <p class="subheadline">
+          Stop unverified AI and infrastructure changes before they execute.
+        </p>
+        <div class="cta-group">
+          <a href="{{REQUEST_ACCESS_URL}}" class="btn primary" data-cta="request-access-hero">Request Access</a>
+          <a href="#demo" class="btn secondary" id="watch-demo">Watch Demo</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="demo" class="home-section demo-shell">
+      <div class="container">
+        <h2>See what your systems miss</h2>
+
+        <div class="video-container">
+          <video class="demo-video" controls preload="metadata" playsinline>
+            <source src="/assets/zti-demo.mp4" type="video/mp4" />
+            Your browser does not support the demo video.
+          </video>
+        </div>
+
+        <p class="demo-caption">
+          This is not a simulation. This is deterministic verification.
+        </p>
+
+        <pre id="demo-terminal-output">Loading demo output...</pre>
+
+        <div class="demo-points">
+          <div>Blocks unsafe changes</div>
+          <div>Catches near-miss failures</div>
+          <div>Produces audit-ready proof</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-section">
+      <div class="container narrow">
+        <h2>Your systems are built on trust</h2>
+        <ul class="problem-list">
+          <li>CI/CD pipelines assume correctness</li>
+          <li>AI outputs are accepted without proof</li>
+          <li>Approvals are treated as valid by default</li>
+        </ul>
+        <p class="problem-line">Trust is the vulnerability.</p>
+      </div>
+    </section>
+
+    <section class="home-section">
+      <div class="container">
+        <h2>ZTI introduces the verification layer</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Verify before execution</h3>
+            <p>No decision reaches runtime without validation.</p>
+          </div>
+          <div class="card">
+            <h3>Enforce decision boundaries</h3>
+            <p>Execution is blocked at the verification layer.</p>
+          </div>
+          <div class="card">
+            <h3>Prove every action</h3>
+            <p>Every decision is traceable and auditable.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-section">
+      <div class="container">
+        <h2>What you just saw</h2>
+        <div class="grid">
+          <div class="card small">Obvious failure blocked</div>
+          <div class="card small">Near-miss caught</div>
+          <div class="card small">Only verified execution allowed</div>
+          <div class="card small">Full audit reconstruction</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-section">
+      <div class="container narrow">
+        <h2>This is what auditors expect</h2>
+        <ul class="authority-list">
+          <li>Full decision trace</li>
+          <li>Verified lineage</li>
+          <li>Immutable execution record</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="home-section cta-shell">
+      <div class="container">
+        <h2>Your current systems operate on trust — not verification</h2>
+        <a href="{{REQUEST_ACCESS_URL}}" class="btn primary large" data-cta="request-access-final">Request Access to ZTI Core</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="{{ASSETS_URL}}/site.js"></script>
+</body>
+</html>
