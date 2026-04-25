@@ -1,6 +1,6 @@
 # Zero Trust Intelligence (ZTI)
 
-## A Decision Verification Protocol for AI-Driven Systems
+## The Zero Trust Intelligence Doctrine and Reference Library
 
 AI output is not a decision. A decision is something that can be proven.
 
@@ -256,25 +256,51 @@ As systems become more automated, the boundary between proposal and execution be
 
 ---
 
-## Install
+## The ZTI Ecosystem
 
-Clone the repository and install it in editable mode:
+ZTI doctrine is the foundation of a family of protocols and products.
+
+| Component | Repository | Purpose |
+|---|---|---|
+| **ZTI** | this repo | Doctrine, principles, reference library |
+| **ZTAP** | [github.com/bitscon/ztap](https://github.com/bitscon/ztap) | Open agent transaction protocol under ZTI |
+| **ZTI Core** | separate (private) | Commercial SaaS control-plane implementation |
+| **ZTI Adoption** | [github.com/bitscon/zti-adoption](https://github.com/bitscon/zti-adoption) | Public education and marketing site |
+
+ZTAP is the first open protocol under ZTI doctrine. It defines how agent-to-agent and
+agent-to-system transactions must be structured to be authorized, verifiable, and auditable.
+Current ZTAP release: `v1.0-draft`.
+
+ZTI Core is a separate commercial product. It is not part of this repository.
+
+For the full ecosystem overview, see [PROTOCOL_FAMILY.md](PROTOCOL_FAMILY.md).
+For ZTI doctrine, see [DOCTRINE.md](DOCTRINE.md).
+For repository boundary rules, see [PRODUCT_BOUNDARIES.md](PRODUCT_BOUNDARIES.md).
+
+---
+
+## Reference Library
+
+This repository contains the `zti` Python package — an open-source reference implementation
+of the ZTI verification pipeline (Pattern Registry → Detection → Explainability → Validation
+→ Integrity → Lineage).
+
+Install in editable mode:
 
 ```bash
-git clone https://github.com/bitscon/zerotrustintelligence
-cd zerotrustintelligence
+git clone https://github.com/bitscon/zti
+cd zti
 python3 -m pip install -e .
 ```
 
-Run the test suite locally with:
+*(Note: the install URL above reflects the final repository name `bitscon/zti`.
+Until the GitHub rename is complete, use `bitscon/zerotrustintelligence`.)*
+
+Run the test suite:
 
 ```bash
 python3 -m pytest -q
 ```
-
----
-
-## Examples
 
 Reference examples are available in [`examples/`](examples/).
 
@@ -282,32 +308,14 @@ Reference examples are available in [`examples/`](examples/).
 
 ## Whitepaper
 
-Full protocol specification:
+Full ZTI doctrine whitepaper:
 
 [`whitepaper/zti-whitepaper.md`](whitepaper/zti-whitepaper.md)
 
 ---
 
-## Site
+## Authorship
 
-Website source lives in:
+ZTI was created by **Chad McCormack**.
 
-[`dev/site/_src/`](dev/site/_src/)
-
-Build the deployable site artifact with:
-
-```bash
-python3 dev/site/build.py --out dev/site/_dist
-```
-
-Verify it with:
-
-```bash
-./ops/verify.sh
-```
-
----
-
-## License
-
-MIT License
+© 2026 Chad McCormack. MIT License.
